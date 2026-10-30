@@ -16,6 +16,7 @@ import CalibrationModal from './components/CalibrationModal';
 import WaterSavingsModal from './components/WaterSavingsModal';
 import HardwareSimulator from './components/HardwareSimulator';
 import AlertsCenter from './components/AlertsCenter';
+import HardwareCenter from './components/HardwareCenter';
 import confetti from 'canvas-confetti';
 
 import {
@@ -278,6 +279,28 @@ export default function App() {
     addToast('2-point calibration committed to hardware flash!', 'success');
   };
 
+  const handleHardwareTelemetryUpdate = (data) => {
+    setPots((prevPots) =>
+      prevPots.map((p) => {
+        if (p.id !== activePotId) return p;
+        return {
+          ...p,
+          telemetry: {
+            ...p.telemetry,
+            moisture: data.moisture !== undefined ? data.moisture : p.telemetry.moisture,
+            rawAdc: data.raw_adc !== undefined ? data.raw_adc : p.telemetry.rawAdc,
+            temperature: data.temp !== undefined ? data.temp : p.telemetry.temperature,
+            humidity: data.humidity !== undefined ? data.humidity : p.telemetry.humidity,
+            light: data.light !== undefined ? data.light : p.telemetry.light,
+            tankLevelPercent: data.tank_ok !== undefined ? (data.tank_ok ? p.telemetry.tankLevelPercent : 5) : p.telemetry.tankLevelPercent,
+            lastUpdated: Date.now()
+          }
+        };
+      })
+    );
+    addToast('Live data received from physical ESP32!', 'success');
+  };
+
   const handleDismissAlert = (id) => {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
   };
@@ -425,10 +448,10 @@ export default function App() {
             <button
               onClick={() => setActiveNav('hardware')}
               className={`sidebar-nav-item ${activeNav === 'hardware' ? 'active' : ''}`}
-              title="ESP32 microcontroller health, WiFi RSSI, and heap memory"
+              title="ESP32 microcontroller hardware architecture, circuit schematic & Web Serial link"
             >
               <Cpu className="sidebar-nav-icon" size={18} />
-              <span>ESP32 Device</span>
+              <span>ESP32 Hardware</span>
             </button>
 
             <button
@@ -477,7 +500,7 @@ export default function App() {
               {activeNav === 'analytics' && 'Telemetry Analytics'}
               {activeNav === 'fleet' && 'Plant Fleet Management'}
               {activeNav === 'logs' && 'Watering Logs & Records'}
-              {activeNav === 'hardware' && 'ESP32 Device Status'}
+              {activeNav === 'hardware' && 'ESP32 Hardware & IoT Architecture'}
               {activeNav === 'calibration' && 'Sensor Calibration Lab'}
             </h1>
             <span style={{ fontSize: '12px', fontWeight: 600, color: '#10b981', background: '#e4f7ee', padding: '3px 10px', borderRadius: '12px', border: '1px solid #c7eed9' }}>
@@ -1401,66 +1424,23 @@ export default function App() {
       </div>
     )}
 
-    {/* 5. VIEW: ESP32 DEVICE STATUS */}
+    {/* 5. VIEW: ESP32 HARDWARE & IOT ARCHITECTURE */}
     {activeNav === 'hardware' && (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Device Status Card */}
+        {/* Device Status Live Summary */}
         <DeviceStatusCard
           device={activePot.device}
           lastUpdatedMs={activePot.telemetry.lastUpdated}
         />
 
-        {/* Hardware Pinout & Peripheral Mapping */}
-        <div className="ref-card">
-          <h3 style={{ fontSize: '14px', fontWeight: 700, marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Cpu size={16} color="#00c06d" />
-            ESP32 Edge Microcontroller GPIO & Peripheral Mapping
-          </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px' }}>
-            <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: '#00c06d', textTransform: 'uppercase' }}>GPIO34 (ADC1_CH6)</div>
-              <div style={{ fontWeight: 700, fontSize: '13.5px', marginTop: '4px' }}>Capacitive Soil Sensor</div>
-              <div style={{ fontSize: '11.5px', color: '#64748b', marginTop: '4px' }}>12-bit analog input, 0-3.3V range with low-noise attenuation.</div>
-            </div>
-            <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: '#0284c7', textTransform: 'uppercase' }}>GPIO22 (Output)</div>
-              <div style={{ fontWeight: 700, fontSize: '13.5px', marginTop: '4px' }}>Submersible Pump Relay</div>
-              <div style={{ fontSize: '11.5px', color: '#64748b', marginTop: '4px' }}>Optocoupler-isolated MOSFET gate driver for DC mini pump.</div>
-            </div>
-            <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase' }}>GPIO21 (Bidirectional)</div>
-              <div style={{ fontWeight: 700, fontSize: '13.5px', marginTop: '4px' }}>DHT22 Environmental</div>
-              <div style={{ fontSize: '11.5px', color: '#64748b', marginTop: '4px' }}>Single-bus digital protocol for calibrated temp & humidity.</div>
-            </div>
-            <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #ef4444', textTransform: 'uppercase' }}>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: '#ef4444' }}>GPIO32 (Digital In)</div>
-              <div style={{ fontWeight: 700, fontSize: '13.5px', marginTop: '4px', color: 'var(--text-main)', textTransform: 'none' }}>Reservoir Float Switch</div>
-              <div style={{ fontSize: '11.5px', color: '#64748b', marginTop: '4px', textTransform: 'none' }}>Internal pullup magnetic reed switch; hardware pump lockout.</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Hardware Simulator Banner */}
-        <div className="ref-card" style={{ background: '#fef3c7', border: '1px solid #fde68a' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#92400e', margin: 0 }}>
-                Interactive Hardware & Fault Injection Simulator
-              </h4>
-              <p style={{ fontSize: '12px', color: '#b45309', margin: '4px 0 0 0' }}>
-                Simulate dry soil ADC levels, empty reservoir float triggers, or telemetry drops without needing physical hardware.
-              </p>
-            </div>
-            <button
-              onClick={() => setIsHardwareSimOpen(true)}
-              className="btn-black-pill"
-              style={{ background: '#78350f', borderColor: '#92400e' }}
-            >
-              <Cpu size={14} color="#fef3c7" />
-              <span>Open Simulator</span>
-            </button>
-          </div>
-        </div>
+        {/* Complete Hardware Center (Concept, Schematic, Web Serial, Firmware, BOM) */}
+        <HardwareCenter
+          activePot={activePot}
+          onHardwareTelemetryUpdate={handleHardwareTelemetryUpdate}
+          onOpenSimulator={() => setIsHardwareSimOpen(true)}
+          onTriggerWatering={triggerWatering}
+          isPumping={isPumping}
+        />
       </div>
     )}
 
