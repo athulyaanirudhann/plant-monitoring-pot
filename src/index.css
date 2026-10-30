@@ -72,8 +72,8 @@
   --subtle-input-bg: rgba(249, 235, 215, 0.55);
   --table-hover: rgba(249, 235, 215, 0.7);
 
-  --radius-window: 28px;
-  --radius-card: 18px;
+  --radius-window: 0px;
+  --radius-card: 14px;
   --radius-pill: 9999px;
 }
 
@@ -1277,8 +1277,8 @@ html, body {
   align-items: flex-start;
   justify-content: space-between;
   padding: 8px 0 16px 0;
-  min-height: 100px;
-  border-radius: var(--radius-card);
+  min-height: 90px;
+  border-radius: 0;
   overflow: visible;
 }
 
@@ -1287,13 +1287,14 @@ html, body {
   top: -24px;
   right: -32px;
   width: 580px;
-  height: 200px;
+  height: 140px;
   background-image: url('/botanical_header.jpg');
   background-size: cover;
   background-position: right top;
-  border-top-right-radius: var(--radius-window);
-  mask-image: radial-gradient(circle at 80% 30%, black 50%, transparent 85%);
-  -webkit-mask-image: radial-gradient(circle at 80% 30%, black 50%, transparent 85%);
+  border-radius: 0;
+  border-top-right-radius: 0;
+  mask-image: radial-gradient(circle at 85% 25%, black 45%, transparent 82%);
+  -webkit-mask-image: radial-gradient(circle at 85% 25%, black 45%, transparent 82%);
   opacity: 0.95;
   pointer-events: none;
   z-index: 0;
@@ -1413,7 +1414,7 @@ html, body {
 
 .metric-quad-card {
   background: var(--card-bg);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 18px 20px;
   border: 1px solid var(--card-border);
   box-shadow: var(--card-shadow);
@@ -1534,7 +1535,7 @@ html, body {
 
 .mockup-card {
   background: var(--card-bg);
-  border-radius: 22px;
+  border-radius: var(--radius-card);
   padding: 20px 22px;
   border: 1px solid var(--card-border);
   box-shadow: var(--card-shadow);
@@ -1831,19 +1832,31 @@ html, body {
 .tank-render-img {
   width: 78px;
   height: 94px;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid rgba(31, 59, 46, 0.1);
-  box-shadow: 0 2px 8px rgba(31, 59, 46, 0.08);
+  object-fit: contain;
+  background: transparent;
+  filter: drop-shadow(0 4px 10px rgba(31, 59, 46, 0.12));
   flex-shrink: 0;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.tank-render-img:hover {
+  transform: translateY(-2px) scale(1.03);
+  filter: drop-shadow(0 6px 14px rgba(31, 59, 46, 0.18));
 }
 
 .potted-plant-render-img {
   width: 78px;
-  height: 88px;
+  height: 94px;
   object-fit: contain;
-  border-radius: 12px;
+  background: transparent;
+  filter: drop-shadow(0 4px 10px rgba(31, 59, 46, 0.12));
   flex-shrink: 0;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.potted-plant-render-img:hover {
+  transform: translateY(-2px) scale(1.03);
+  filter: drop-shadow(0 6px 14px rgba(31, 59, 46, 0.18));
 }
 
 .widget-info-col {

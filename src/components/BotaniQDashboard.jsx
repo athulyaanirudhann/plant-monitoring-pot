@@ -547,7 +547,7 @@ export default function BotaniQDashboard({
 
           <div className="widget-content-layout">
             <img
-              src="/water_tank.jpg"
+              src="/water_tank.png"
               alt="Water Reservoir Container"
               className="tank-render-img"
             />
@@ -595,7 +595,7 @@ export default function BotaniQDashboard({
 
           <div className="widget-content-layout">
             <img
-              src="/potted_plant.jpg"
+              src="/potted_plant.png"
               alt="Swiss Cheese Plant (Monstera)"
               className="potted-plant-render-img"
             />
