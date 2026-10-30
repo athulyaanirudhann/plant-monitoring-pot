@@ -1266,3 +1266,686 @@ html, body {
   background-color: var(--table-hover);
 }
 
+/* ==========================================================================
+   EXACT BOTANIQ IOT MOCKUP DESIGN SYSTEM & CARD STYLES
+   ========================================================================== */
+
+/* Top Canvas Header Hero with Lush Foliage Banner */
+.dashboard-header-hero {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 8px 0 16px 0;
+  min-height: 100px;
+  border-radius: var(--radius-card);
+  overflow: visible;
+}
+
+.dashboard-hero-foliage {
+  position: absolute;
+  top: -24px;
+  right: -32px;
+  width: 580px;
+  height: 200px;
+  background-image: url('/botanical_header.jpg');
+  background-size: cover;
+  background-position: right top;
+  border-top-right-radius: var(--radius-window);
+  mask-image: radial-gradient(circle at 80% 30%, black 50%, transparent 85%);
+  -webkit-mask-image: radial-gradient(circle at 80% 30%, black 50%, transparent 85%);
+  opacity: 0.95;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-greeting-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-greeting-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  line-height: 1.15;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-greeting-sub {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.hero-actions-cluster {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-live-pill {
+  background: #ffffff;
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 2px 10px rgba(31, 59, 46, 0.08);
+  border: 1px solid rgba(31, 59, 46, 0.08);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.hero-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--accent-green);
+  box-shadow: 0 0 6px var(--accent-green);
+  animation: pulse 1.8s infinite ease-in-out;
+}
+
+.hero-circle-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(31, 59, 46, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  box-shadow: 0 2px 8px rgba(31, 59, 46, 0.08);
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.hero-circle-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(31, 59, 46, 0.12);
+  border-color: var(--accent-green);
+}
+
+.hero-avatar-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--sidebar-bg);
+  border: 2px solid #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(31, 59, 46, 0.15);
+  cursor: pointer;
+}
+
+/* 1. TOP ROW: QUAD METRIC CARDS GRID (Soil Moisture, Temperature, Humidity, Light Level) */
+.top-metric-quad-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 1200px) {
+  .top-metric-quad-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .top-metric-quad-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metric-quad-card {
+  background: var(--card-bg);
+  border-radius: 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.metric-quad-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(31, 59, 46, 0.08);
+}
+
+.metric-quad-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.metric-icon-disc {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(4, 106, 56, 0.1);
+  color: var(--accent-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metric-icon-disc.amber {
+  background: rgba(227, 66, 34, 0.1);
+  color: #d97706;
+}
+
+.metric-quad-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.metric-quad-body {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.metric-quad-num {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  line-height: 1.05;
+  font-feature-settings: 'tnum' 1;
+}
+
+.metric-quad-num span {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 3px;
+}
+
+.metric-quad-trend {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--accent-green);
+  margin-top: 4px;
+}
+
+.metric-sparkline-svg {
+  width: 85px;
+  height: 32px;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.metric-segmented-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(4, 106, 56, 0.12);
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.metric-segmented-bar-fill {
+  height: 100%;
+  background: var(--accent-green);
+  border-radius: var(--radius-pill);
+  transition: width 300ms ease;
+}
+
+/* 2. MIDDLE ROW: 3 CARDS GRID (Plant Health, Sensor Trends, Irrigation Control) */
+.mid-control-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1.35fr 0.95fr;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 1100px) {
+  .mid-control-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mockup-card {
+  background: var(--card-bg);
+  border-radius: 22px;
+  padding: 20px 22px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.mockup-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.mockup-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.01em;
+}
+
+/* Plant Health Donut & Checkmarks */
+.plant-health-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 6px 0;
+}
+
+.donut-gauge-wrapper {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.donut-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.donut-center-content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.donut-sprout-icon {
+  font-size: 20px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.donut-pct-text {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.donut-sub-text {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.plant-health-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.health-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.check-circle-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(4, 106, 56, 0.12);
+  color: var(--accent-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.check-label-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.check-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.check-status {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--accent-green);
+}
+
+.corner-leaf-decor {
+  position: absolute;
+  bottom: -6px;
+  left: -6px;
+  width: 65px;
+  height: 65px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* Sensor Trends Multi-Line Chart */
+.sensor-trends-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.time-range-pills {
+  display: inline-flex;
+  align-items: center;
+  background: var(--subtle-input-bg);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+  gap: 3px;
+  border: 1px solid var(--card-border);
+}
+
+.time-pill-btn {
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.time-pill-btn.active {
+  background: var(--sidebar-bg);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Irrigation Control Card */
+.irrigation-inner-container {
+  background: rgba(4, 106, 56, 0.08);
+  border: 1px solid rgba(4, 106, 56, 0.15);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.irrigation-pump-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pump-droplet-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--accent-green);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(4, 106, 56, 0.25);
+}
+
+.pump-droplet-badge.off {
+  background: var(--sidebar-bg);
+  opacity: 0.7;
+}
+
+.pump-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.pump-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.pump-state-headline {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.pump-reason-desc {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+.irrigation-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.irrigation-action-btn {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-pill);
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(31, 59, 46, 0.05);
+  transition: all 160ms ease;
+}
+
+.irrigation-action-btn:hover {
+  background: var(--subtle-input-bg);
+  border-color: var(--accent-green);
+  transform: translateY(-1px);
+}
+
+/* 3. BOTTOM ROW: 3 WIDGETS GRID (Water Reservoir, Species Presets, Recent Activity) */
+.bottom-widgets-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 992px) {
+  .bottom-widgets-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.widget-content-layout {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.tank-render-img {
+  width: 78px;
+  height: 94px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(31, 59, 46, 0.1);
+  box-shadow: 0 2px 8px rgba(31, 59, 46, 0.08);
+  flex-shrink: 0;
+}
+
+.potted-plant-render-img {
+  width: 78px;
+  height: 88px;
+  object-fit: contain;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.widget-info-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.widget-headline-val {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-feature-settings: 'tnum' 1;
+}
+
+.widget-sub-metric {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: 2px;
+  margin-bottom: 8px;
+}
+
+.widget-action-pill {
+  background: var(--sidebar-bg);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 6px 16px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: all 160ms ease;
+  box-shadow: 0 2px 6px rgba(31, 59, 46, 0.15);
+}
+
+.widget-action-pill:hover {
+  background: var(--accent-green);
+  transform: translateY(-1px);
+}
+
+.widget-action-pill.outline {
+  background: #ffffff;
+  color: var(--text-main);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 1px 3px rgba(31, 59, 46, 0.05);
+}
+
+.widget-action-pill.outline:hover {
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+
+/* Activity Feed List */
+.activity-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 4px;
+}
+
+.activity-feed-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.activity-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.activity-dot.green {
+  background-color: var(--accent-green);
+  box-shadow: 0 0 5px var(--accent-green);
+}
+
+.activity-dot.blue {
+  background-color: #0284c7;
+}
+
+.activity-dot.orange {
+  background-color: var(--accent-coral);
+}
+
+.activity-text-title {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.activity-time-stamp {
+  color: var(--text-light);
+  font-size: 11px;
+  margin-left: auto;
+}
+
+

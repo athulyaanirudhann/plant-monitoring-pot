@@ -17,6 +17,9 @@ import WaterSavingsModal from './components/WaterSavingsModal';
 import HardwareSimulator from './components/HardwareSimulator';
 import AlertsCenter from './components/AlertsCenter';
 import HardwareCenter from './components/HardwareCenter';
+import BotaniQDashboard from './components/BotaniQDashboard';
+import ThresholdModal from './components/ThresholdModal';
+import SpeciesModal from './components/SpeciesModal';
 import confetti from 'canvas-confetti';
 import {
   getMoistureStatus,
@@ -40,6 +43,9 @@ import {
   HelpCircle,
   Sliders,
   Droplet,
+  Droplets,
+  Thermometer,
+  Sun,
   Layers,
   Cpu,
   ArrowUpRight,
@@ -55,7 +61,10 @@ import {
   Box,
   Wifi,
   Square,
-  Play
+  Play,
+  Bell,
+  Settings,
+  Activity
 } from 'lucide-react';
 
 export default function App() {
@@ -78,6 +87,8 @@ export default function App() {
   const [isCalibrationOpen, setIsCalibrationOpen] = useState(false);
   const [isWaterSavingsOpen, setIsWaterSavingsOpen] = useState(false);
   const [isHardwareSimOpen, setIsHardwareSimOpen] = useState(false);
+  const [isThresholdModalOpen, setIsThresholdModalOpen] = useState(false);
+  const [isSpeciesModalOpen, setIsSpeciesModalOpen] = useState(false);
   const [card3View, setCard3View] = useState('map'); // 'map' | 'pot'
 
   // Sensor Calibration Workbench State
@@ -584,6 +595,15 @@ export default function App() {
               <Sliders className="sidebar-nav-icon" size={18} />
               <span>Sensor Calibration</span>
             </button>
+
+            <button
+              onClick={() => setIsCalibrationOpen(true)}
+              className="sidebar-nav-item"
+              title="Configure sensor thresholds and species rules"
+            >
+              <Settings className="sidebar-nav-icon" size={18} />
+              <span>Settings</span>
+            </button>
           </div>
         </div>
 
@@ -614,112 +634,111 @@ export default function App() {
 
       {/* 2. RIGHT MAIN CANVAS */}
       <main className="main-canvas">
-        {/* Header Bar */}
-        <div className="canvas-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            <h1 className="canvas-title">
-              {activeNav === 'dashboard' && 'Dashboard'}
-              {activeNav === 'analytics' && 'Telemetry Analytics'}
-              {activeNav === 'fleet' && 'Plant Fleet Management'}
-              {activeNav === 'logs' && 'Watering Logs & Records'}
-              {activeNav === 'hardware' && 'ESP32 Hardware & IoT Architecture'}
-              {activeNav === 'calibration' && 'Sensor Calibration Lab'}
-            </h1>
+        {/* Header Bar for sub-pages */}
+        {activeNav !== 'dashboard' && (
+          <div className="canvas-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+              <h1 className="canvas-title">
+                {activeNav === 'analytics' && 'Telemetry Analytics'}
+                {activeNav === 'fleet' && 'Plant Fleet Management'}
+                {activeNav === 'logs' && 'Watering Logs & Records'}
+                {activeNav === 'hardware' && 'ESP32 Hardware & IoT Architecture'}
+                {activeNav === 'calibration' && 'Sensor Calibration Lab'}
+              </h1>
 
-            {/* Plant Identification Badge */}
-            <span style={{ fontSize: '12px', fontWeight: 600, color: '#10b981', background: '#e4f7ee', padding: '4px 11px', borderRadius: '12px', border: '1px solid #c7eed9' }}>
-              ● {activePot.name}
-            </span>
+              {/* Plant Identification Badge */}
+              <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--accent-green)', background: 'rgba(4, 106, 56, 0.1)', padding: '4px 11px', borderRadius: '12px', border: '1px solid rgba(4, 106, 56, 0.2)' }}>
+                ● {activePot.name}
+              </span>
 
-            {/* Dynamic Overall Plant Status Badge (Section 3) */}
-            <span
-              style={{
-                fontSize: '11px',
-                fontWeight: 700,
-                color: plantStatus.color,
-                background: plantStatus.bg,
-                padding: '4px 10px',
-                borderRadius: '12px',
-                border: `1px solid ${plantStatus.border}`,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px',
-                letterSpacing: '0.03em'
-              }}
-              title={plantStatus.reason}
-            >
-              ● {plantStatus.label}
-            </span>
+              {/* Dynamic Overall Plant Status Badge */}
+              <span
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: plantStatus.color,
+                  background: plantStatus.bg,
+                  padding: '4px 10px',
+                  borderRadius: '12px',
+                  border: `1px solid ${plantStatus.border}`,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  letterSpacing: '0.03em'
+                }}
+                title={plantStatus.reason}
+              >
+                ● {plantStatus.label}
+              </span>
 
-            {/* Real-Time Sensor Data Freshness (Section 15) */}
-            <span
-              style={{
-                fontSize: '11px',
-                fontWeight: 500,
-                color: isStale ? '#b45309' : 'var(--text-muted)',
-                background: isStale ? '#fef3c7' : 'var(--subtle-input-bg)',
-                padding: '3px 8px',
-                borderRadius: '8px',
-                border: '1px solid var(--card-border)',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}
-              title={`Telemetry received from ${activePot.device.deviceId}`}
-            >
-              {isStale ? (
-                <>
-                  <span style={{ color: '#f59e0b', fontWeight: 700 }}>⚠ Data may be outdated</span> ({dataAgeSec}s ago)
-                </>
-              ) : (
-                <>
-                  <span style={{ color: '#10b981' }}>●</span> Last updated: {dataAgeSec === 0 ? 'just now' : `${dataAgeSec}s ago`}
-                </>
-              )}
-            </span>
-          </div>
+              {/* Real-Time Sensor Data Freshness */}
+              <span
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  color: isStale ? 'var(--accent-coral)' : 'var(--text-muted)',
+                  background: isStale ? 'rgba(227, 66, 34, 0.1)' : 'var(--subtle-input-bg)',
+                  padding: '3px 8px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--card-border)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}
+                title={`Telemetry received from ${activePot.device.deviceId}`}
+              >
+                {isStale ? (
+                  <>
+                    <span style={{ color: 'var(--accent-coral)', fontWeight: 700 }}>⚠ Data may be outdated</span> ({dataAgeSec}s ago)
+                  </>
+                ) : (
+                  <>
+                    <span style={{ color: 'var(--accent-green)' }}>●</span> Last updated: {dataAgeSec === 0 ? 'just now' : `${dataAgeSec}s ago`}
+                  </>
+                )}
+              </span>
+            </div>
 
-          <div className="canvas-header-actions">
-            {activeNav !== 'dashboard' && (
+            <div className="canvas-header-actions">
               <button
                 onClick={() => setActiveNav('dashboard')}
                 className="btn-white-pill"
                 title="Return to main dashboard overview"
               >
-                <LayoutDashboard size={14} color="#00c06d" />
+                <LayoutDashboard size={14} color="var(--accent-green)" />
                 <span>Dashboard Overview</span>
               </button>
-            )}
 
-            <button
-              onClick={() => setIsWaterSavingsOpen(true)}
-              className="btn-white-pill"
-              title="View comparative conservation audit"
-            >
-              <TrendingDown size={14} color="#00c06d" />
-              <span>Savings (61%)</span>
-            </button>
+              <button
+                onClick={() => setIsWaterSavingsOpen(true)}
+                className="btn-white-pill"
+                title="View comparative conservation audit"
+              >
+                <TrendingDown size={14} color="var(--accent-green)" />
+                <span>Savings (61%)</span>
+              </button>
 
-            <button
-              onClick={() => setIsHardwareSimOpen(true)}
-              className="btn-white-pill"
-              title="Simulate dry soil or faults"
-            >
-              <Cpu size={14} color="#f59e0b" />
-              <span>Simulator</span>
-            </button>
+              <button
+                onClick={() => setIsHardwareSimOpen(true)}
+                className="btn-white-pill"
+                title="Simulate dry soil or faults"
+              >
+                <Cpu size={14} color="#f59e0b" />
+                <span>Simulator</span>
+              </button>
 
-            <button
-              onClick={() => triggerWatering(6, 'Manual', 'Manual pulse initiated from Header')}
-              disabled={isPumping || activePot.telemetry.tankLevelPercent <= 5}
-              className="btn-black-pill"
-              title="Dispense water pulse"
-            >
-              <Droplet size={14} color="#38bdf8" />
-              <span>{isPumping ? 'Dispensing...' : 'Dispense Pulse'}</span>
-            </button>
+              <button
+                onClick={() => triggerWatering(6, 'Manual', 'Manual pulse initiated from Header')}
+                disabled={isPumping || activePot.telemetry.tankLevelPercent <= 5}
+                className="btn-black-pill"
+                title="Dispense water pulse"
+              >
+                <Droplet size={14} color="#38bdf8" />
+                <span>{isPumping ? 'Dispensing...' : 'Dispense Pulse'}</span>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
 
         {/* Diagnostic Alerts Banner */}
@@ -730,703 +749,31 @@ export default function App() {
           onTestSoundAlert={handleTestSoundAlert}
         />
 
-        {/* 1. VIEW: DASHBOARD */}
+        {/* 1. VIEW: DASHBOARD (EXACT BOTANIQ IOT REFERENCE MOCKUP) */}
         {activeNav === 'dashboard' && (
-          <>
-            {/* 3. TOP ROW: 3 STAT CARDS (Section 2: Soil Moisture, Temperature, Illumination & Humidity) */}
-            <div className="ref-top-metrics-grid">
-              {/* Card 1: Soil Moisture */}
-              <div className="ref-stat-card">
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span className="ref-stat-label">Soil Moisture</span>
-                    <span
-                      style={{
-                        fontSize: '10px',
-                        fontWeight: 700,
-                        padding: '1px 7px',
-                        borderRadius: '6px',
-                        background: sensorHealth.soilMoisture !== 'online' ? '#fee2e2' : moistureStatus === 'Optimal' ? '#e4f7ee' : moistureStatus === 'Dry' ? '#fef3c7' : '#e0f2fe',
-                        color: sensorHealth.soilMoisture !== 'online' ? '#ef4444' : moistureStatus === 'Optimal' ? '#047857' : moistureStatus === 'Dry' ? '#b45309' : '#0284c7'
-                      }}
-                    >
-                      {sensorHealth.soilMoisture !== 'online' ? 'Offline' : moistureStatus}
-                    </span>
-                  </div>
-                  <div className="ref-stat-value tnum">
-                    {sensorHealth.soilMoisture === 'online' && activePot.telemetry.moisture !== null ? activePot.telemetry.moisture.toFixed(1) : '--'}
-                    <span style={{ fontSize: '16px', fontWeight: 500, color: '#647d72' }}> %</span>
-                  </div>
-                  <div className="ref-stat-sub">
-                    <span style={{ color: '#00c06d', fontWeight: 600 }}>Target: {activePot.settings.thresholdLow}%–{activePot.settings.thresholdHigh}%</span>
-                    <span>• Min: {activePot.settings.thresholdLow}%</span>
-                  </div>
-                </div>
-                {/* Green Mini Bar Sparkline */}
-                <div className="mini-bar-chart">
-                  {moistureBars.map((h, i) => (
-                    <div
-                      key={i}
-                      className="mini-bar"
-                      style={{
-                        height: `${h}px`,
-                        backgroundColor: i >= moistureBars.length - 2 ? '#00c06d' : '#86efac'
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
+          <BotaniQDashboard
+            activePot={activePot}
+            sensorHealth={sensorHealth}
+            dataAgeSec={dataAgeSec}
+            alerts={alerts.filter((a) => a.potId === activePotId)}
+            handleTestSoundAlert={handleTestSoundAlert}
+            timeRange={timeRange}
+            setTimeRange={setTimeRange}
+            isPumping={isPumping}
+            stopWatering={stopWatering}
+            triggerWatering={triggerWatering}
+            setIsThresholdModalOpen={setIsThresholdModalOpen}
+            setIsSpeciesModalOpen={setIsSpeciesModalOpen}
+            setPots={setPots}
+            activePotId={activePotId}
+            addToast={addToast}
+            setActiveNav={setActiveNav}
+            setIsHardwareSimOpen={setIsHardwareSimOpen}
+            setIsWaterSavingsOpen={setIsWaterSavingsOpen}
+          />
+        )}
 
-              {/* Card 2: Ambient Temperature */}
-              <div className="ref-stat-card">
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span className="ref-stat-label">Ambient Temperature</span>
-                    <span
-                      style={{
-                        fontSize: '10px',
-                        fontWeight: 700,
-                        padding: '1px 7px',
-                        borderRadius: '6px',
-                        background: sensorHealth.dht22 !== 'online' ? '#fee2e2' : tempStatus === 'Normal' ? '#e4f7ee' : '#fef3c7',
-                        color: sensorHealth.dht22 !== 'online' ? '#ef4444' : tempStatus === 'Normal' ? '#047857' : '#b45309'
-                      }}
-                    >
-                      {sensorHealth.dht22 !== 'online' ? 'Offline' : tempStatus}
-                    </span>
-                  </div>
-                  <div className="ref-stat-value tnum">
-                    {sensorHealth.dht22 === 'online' && activePot.telemetry.temperature !== null ? activePot.telemetry.temperature.toFixed(1) : '--'}
-                    <span style={{ fontSize: '16px', fontWeight: 500, color: '#647d72' }}> °C</span>
-                  </div>
-                  <div className="ref-stat-sub">
-                    <span style={{ color: '#00c06d', fontWeight: 600 }}>Target: {activePot.settings.tempMin || 18}°C–{activePot.settings.tempMax || 29}°C</span>
-                    <span>• DHT22</span>
-                  </div>
-                </div>
-                {/* Coral/Orange Mini Bar Sparkline */}
-                <div className="mini-bar-chart">
-                  {tempBars.map((h, i) => (
-                    <div
-                      key={i}
-                      className="mini-bar"
-                      style={{
-                        height: `${h}px`,
-                        backgroundColor: i === tempBars.length - 1 ? '#f87171' : '#fca5a5'
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Card 3: Illumination & Relative Humidity */}
-              <div className="ref-stat-card">
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span className="ref-stat-label">Light & Humidity</span>
-                    <span
-                      style={{
-                        fontSize: '10px',
-                        fontWeight: 700,
-                        padding: '1px 7px',
-                        borderRadius: '6px',
-                        background: sensorHealth.lightSensor !== 'online' ? '#fee2e2' : '#e4f7ee',
-                        color: sensorHealth.lightSensor !== 'online' ? '#ef4444' : '#047857'
-                      }}
-                    >
-                      {sensorHealth.lightSensor !== 'online' ? 'Offline' : lightStatus}
-                    </span>
-                  </div>
-                  <div className="ref-stat-value tnum" style={{ fontSize: '24px' }}>
-                    {sensorHealth.lightSensor === 'online' && activePot.telemetry.light !== null ? activePot.telemetry.light.toLocaleString() : '--'}
-                    <span style={{ fontSize: '15px', fontWeight: 500, color: '#647d72' }}> Lux</span>
-                  </div>
-                  <div className="ref-stat-sub">
-                    <span style={{ color: '#0284c7', fontWeight: 600 }}>
-                      Humidity: {sensorHealth.dht22 === 'online' ? `${activePot.telemetry.humidity.toFixed(1)}% (${humidityStatus})` : '--'}
-                    </span>
-                    <span>• VPD {sensorHealth.dht22 === 'online' ? activePot.telemetry.vpd : '--'} kPa</span>
-                  </div>
-                </div>
-                {/* Emerald Mini Bar Sparkline */}
-                <div className="mini-bar-chart">
-                  {lightBars.map((h, i) => (
-                    <div
-                      key={i}
-                      className="mini-bar"
-                      style={{
-                        height: `${h}px`,
-                        backgroundColor: i === lightBars.length - 1 ? '#00c06d' : '#86efac'
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* SENSOR HEALTH & HARDWARE STATUS STRIP (Section 5) */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '10px 18px',
-                background: 'var(--card-bg)',
-                borderRadius: '14px',
-                border: '1px solid var(--card-border)',
-                boxShadow: 'var(--card-shadow)',
-                flexWrap: 'wrap',
-                gap: '12px'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Cpu size={14} color="#00c06d" />
-                <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
-                  IOT SENSOR STATUS:
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                {/* Soil Sensor */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px' }}>
-                  <span
-                    style={{
-                      width: '7px',
-                      height: '7px',
-                      borderRadius: '50%',
-                      background: sensorHealth.soilMoisture === 'online' ? '#00c06d' : '#ef4444'
-                    }}
-                  />
-                  <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>Soil Sensor</span>
-                  <span style={{ color: sensorHealth.soilMoisture === 'online' ? '#00c06d' : '#ef4444', fontWeight: 600 }}>
-                    — {sensorHealth.soilMoisture === 'online' ? 'Online' : 'Offline'}
-                  </span>
-                </div>
-
-                {/* DHT22 */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px' }}>
-                  <span
-                    style={{
-                      width: '7px',
-                      height: '7px',
-                      borderRadius: '50%',
-                      background: sensorHealth.dht22 === 'online' ? '#00c06d' : '#ef4444'
-                    }}
-                  />
-                  <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>DHT22</span>
-                  <span style={{ color: sensorHealth.dht22 === 'online' ? '#00c06d' : '#ef4444', fontWeight: 600 }}>
-                    — {sensorHealth.dht22 === 'online' ? 'Online' : 'Offline'}
-                  </span>
-                </div>
-
-                {/* Light Sensor */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px' }}>
-                  <span
-                    style={{
-                      width: '7px',
-                      height: '7px',
-                      borderRadius: '50%',
-                      background: sensorHealth.lightSensor === 'online' ? '#00c06d' : '#ef4444'
-                    }}
-                  />
-                  <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>Light Sensor</span>
-                  <span style={{ color: sensorHealth.lightSensor === 'online' ? '#00c06d' : '#ef4444', fontWeight: 600 }}>
-                    — {sensorHealth.lightSensor === 'online' ? 'Online' : 'Offline'}
-                  </span>
-                </div>
-
-                {/* ESP32 Wi-Fi Node */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px' }}>
-                  <span
-                    style={{
-                      width: '7px',
-                      height: '7px',
-                      borderRadius: '50%',
-                      background: sensorHealth.esp32 === 'online' ? '#00c06d' : '#ef4444'
-                    }}
-                  />
-                  <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>ESP32</span>
-                  <span style={{ color: sensorHealth.esp32 === 'online' ? '#00c06d' : '#ef4444', fontWeight: 600 }}>
-                    — {sensorHealth.esp32 === 'online' ? 'Online' : 'Offline'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Quick Simulator Test Access */}
-              <button
-                onClick={() => setIsHardwareSimOpen(true)}
-                className="btn-white-pill"
-                style={{ padding: '4px 10px', fontSize: '11px' }}
-                title="Test normal, dry, critical, or sensor failure scenarios"
-              >
-                <Sliders size={12} color="#f59e0b" />
-                <span>Test IoT Scenarios</span>
-              </button>
-            </div>
-
-        {/* 4. MIDDLE ROW: 3 COLUMNS (Gauge, Species Breakdown, Pot Architecture Map) */}
-        <div className="ref-mid-grid">
-          {/* Column 1: Semi-Circular Donut Gauge (Matching Waste Processing Level 72%) */}
-          <div className="ref-card" style={{ alignItems: 'center', textAlign: 'center' }}>
-            <div style={{ alignSelf: 'flex-start', width: '100%', display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)' }}>
-                Root Zone Soil Moisture
-              </span>
-            </div>
-
-            {/* Big Numeric Value */}
-            <div className="gauge-big-num tnum" style={{ margin: '6px 0 2px' }}>
-              {Math.round(activePot.telemetry.moisture)}%
-            </div>
-
-            {/* SVG Semi-Circular Arc Gauge */}
-            <div className="gauge-container">
-              <svg viewBox="0 0 160 90" width="160" height="90">
-                {/* Background Track (Adapts to light/dark theme) */}
-                <path
-                  d="M 15 80 A 65 65 0 0 1 145 80"
-                  fill="none"
-                  stroke="var(--gauge-track, #e2ebe4)"
-                  strokeWidth="16"
-                  strokeLinecap="round"
-                />
-                {/* Active Colored Arc (Green) */}
-                <path
-                  d="M 15 80 A 65 65 0 0 1 145 80"
-                  fill="none"
-                  stroke="#00c06d"
-                  strokeWidth="16"
-                  strokeLinecap="round"
-                  strokeDasharray="205"
-                  strokeDashoffset={205 - (moistureGaugeVal / 100) * 205}
-                  style={{ transition: 'stroke-dashoffset 400ms ease' }}
-                />
-              </svg>
-            </div>
-
-            <div className="gauge-sub-badge">
-              Target Range: {activePot.settings.thresholdLow}% – {activePot.settings.thresholdHigh}%
-            </div>
-          </div>
-
-          {/* Column 2: Species Breakdown & Energy (Matching Renewable Energy 86%) */}
-          <div className="ref-card">
-            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '4px' }}>
-              Species Threshold Presets
-            </div>
-
-            <div style={{ fontSize: '36px', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', margin: '4px 0' }} className="tnum">
-              {activePot.preset?.thresholdHigh}% <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-muted)' }}>ceiling</span>
-            </div>
-
-            {/* Breakdown List with bullets */}
-            <div className="species-breakdown-list">
-              {PLANT_PRESETS.slice(0, 4).map((p) => {
-                const isSelected = activePot.plantPresetId === p.id;
-                return (
-                  <div
-                    key={p.id}
-                    className="species-row"
-                    onClick={() => handleApplyPreset(p)}
-                    title={`Click to set threshold for ${p.commonName}`}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span className="species-bullet" style={{ backgroundColor: isSelected ? '#00c06d' : '#cbd5e1' }} />
-                      <span style={{ fontWeight: isSelected ? 600 : 400, color: isSelected ? 'var(--text-main)' : 'var(--text-muted)' }}>
-                        {p.commonName.split('/')[0]}
-                      </span>
-                    </div>
-                    <span className="tnum" style={{ fontWeight: 600, color: isSelected ? '#00c06d' : 'var(--text-muted)' }}>
-                      {p.thresholdLow}%–{p.thresholdHigh}%
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-
-            <button
-              onClick={() => setIsCalibrationOpen(true)}
-              className="btn-white-pill"
-              style={{ width: '100%', justifyContent: 'center', marginTop: '12px', padding: '6px' }}
-            >
-              View Calibration (Hrisko)
-            </button>
-          </div>
-
-          {/* Column 3: Sources Usage in Manufacturing (Exact match to mockup with map & toggle) */}
-          <div className="ref-card" style={{ padding: '18px 20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-              <div>
-                <h3 style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-main)' }}>
-                  Sources Usage in Manufacturing
-                </h3>
-                <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                  Percentage of renewable energy sources used in manufacturing industries.
-                </p>
-              </div>
-
-              {/* View Toggle (Map vs Pot Schematic) */}
-              <div style={{ display: 'flex', gap: '3px', background: 'var(--subtle-input-bg)', padding: '2px', borderRadius: '8px', border: '1px solid var(--card-border)' }}>
-                <button
-                  onClick={() => setCard3View('map')}
-                  style={{
-                    border: 'none',
-                    padding: '2px 8px',
-                    fontSize: '10px',
-                    fontWeight: 600,
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    background: card3View === 'map' ? 'var(--card-bg)' : 'transparent',
-                    color: card3View === 'map' ? 'var(--text-main)' : 'var(--text-muted)',
-                    boxShadow: card3View === 'map' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none'
-                  }}
-                  title="View Regional Europe Map from Reference"
-                >
-                  Map
-                </button>
-                <button
-                  onClick={() => setCard3View('pot')}
-                  style={{
-                    border: 'none',
-                    padding: '2px 8px',
-                    fontSize: '10px',
-                    fontWeight: 600,
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    background: card3View === 'pot' ? 'var(--card-bg)' : 'transparent',
-                    color: card3View === 'pot' ? 'var(--text-main)' : 'var(--text-muted)',
-                    boxShadow: card3View === 'pot' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none'
-                  }}
-                  title="View Physical Pot Architecture Cross-Section"
-                >
-                  Pot
-                </button>
-              </div>
-            </div>
-
-            {/* Split layout: Country list on left, Graphic on right */}
-            <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginTop: '6px' }}>
-              {/* Country Percentages List */}
-              <div className="manufacturing-list">
-                <div className="mfg-row">
-                  <div className="mfg-name">
-                    <span className="mfg-dot dot-orange" />
-                    <span>Ukraine</span>
-                  </div>
-                  <span className="mfg-val">89%</span>
-                </div>
-                <div className="mfg-row">
-                  <div className="mfg-name">
-                    <span className="mfg-dot dot-grey" />
-                    <span>Belgium</span>
-                  </div>
-                  <span className="mfg-val">82%</span>
-                </div>
-                <div className="mfg-row">
-                  <div className="mfg-name">
-                    <span className="mfg-dot dot-grey" />
-                    <span>Latvia</span>
-                  </div>
-                  <span className="mfg-val">85%</span>
-                </div>
-                <div className="mfg-row">
-                  <div className="mfg-name">
-                    <span className="mfg-dot dot-grey" />
-                    <span>Spain</span>
-                  </div>
-                  <span className="mfg-val">80%</span>
-                </div>
-                <div className="mfg-row">
-                  <div className="mfg-name">
-                    <span className="mfg-dot dot-grey" />
-                    <span>Italia</span>
-                  </div>
-                  <span className="mfg-val">79%</span>
-                </div>
-                <div className="mfg-row">
-                  <div className="mfg-name">
-                    <span className="mfg-dot dot-grey" />
-                    <span>Portugal</span>
-                  </div>
-                  <span className="mfg-val">76%</span>
-                </div>
-              </div>
-
-              {/* Graphic Display: Europe Map or Pot Schematic */}
-              {card3View === 'map' ? (
-                <div className="europe-map-container">
-                  <svg viewBox="0 0 250 160" className="europe-map-svg">
-                    {/* Western Europe / UK / Iberian Peninsula */}
-                    <path
-                      d="M 30 100 C 40 95 55 105 45 130 C 30 135 20 120 30 100 Z"
-                      fill="#e2e8f0"
-                      stroke="#cbd5e1"
-                      strokeWidth="0.8"
-                    />
-                    <path
-                      d="M 60 70 C 55 60 70 50 85 60 C 80 78 68 78 60 70 Z"
-                      fill="#e2e8f0"
-                      stroke="#cbd5e1"
-                      strokeWidth="0.8"
-                    />
-                    {/* Central Europe / France / Germany / Italy */}
-                    <path
-                      d="M 78 75 C 98 65 112 80 108 105 C 88 110 78 90 78 75 Z"
-                      fill="#fecaca"
-                      stroke="#fca5a5"
-                      strokeWidth="0.8"
-                    />
-                    <path
-                      d="M 98 108 C 102 102 118 118 122 138 C 112 142 102 128 98 108 Z"
-                      fill="#fca5a5"
-                      stroke="#f87171"
-                      strokeWidth="0.8"
-                    />
-                    {/* Scandinavia / Nordic */}
-                    <path
-                      d="M 92 20 C 112 15 130 30 115 58 C 102 54 92 40 92 20 Z"
-                      fill="#e2e8f0"
-                      stroke="#cbd5e1"
-                      strokeWidth="0.8"
-                    />
-                    {/* Eastern Europe / Ukraine (Warm Highlight) */}
-                    <path
-                      d="M 118 65 C 142 50 178 60 188 90 C 168 108 128 98 118 65 Z"
-                      fill="#fed7aa"
-                      stroke="#fb923c"
-                      strokeWidth="1"
-                    />
-                    {/* Black Callout Tag pointing to Ukraine (Exact match to reference mockup) */}
-                    <g transform="translate(126, 36)">
-                      <rect x="0" y="0" width="86" height="34" rx="7" fill="#091a13" stroke="#1c4835" strokeWidth="1" filter="drop-shadow(0 2px 6px rgba(0,0,0,0.3))" />
-                      <text x="10" y="14" fill="#a7f3d0" fontSize="8.5" fontWeight="600">Ukraine</text>
-                      <text x="10" y="26" fill="#ffffff" fontSize="9.5" fontWeight="700">High Level</text>
-                      <text x="60" y="21" fill="#ffffff" fontSize="12" fontWeight="800">89%</text>
-                    </g>
-                    {/* Pin point marker */}
-                    <circle cx="145" cy="78" r="3.5" fill="#f97316" stroke="#ffffff" strokeWidth="1.2" />
-                    <path d="M 145 74 L 148 70" stroke="#091a13" strokeWidth="1.2" strokeLinecap="round" />
-                  </svg>
-                </div>
-              ) : (
-                <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-                  <svg viewBox="0 0 320 180" style={{ width: '100%', maxWidth: '240px', height: 'auto' }}>
-                    {/* Foliage */}
-                    <path d="M 160 90 Q 140 40 160 20 Q 180 40 160 90 Z" fill="#00c06d" stroke="#047857" strokeWidth="1.5" />
-                    <path d="M 160 70 Q 110 50 100 80 Q 130 95 160 70 Z" fill="#00c06d" stroke="#047857" strokeWidth="1.5" />
-                    <path d="M 160 65 Q 210 45 220 75 Q 190 90 160 65 Z" fill="#00c06d" stroke="#047857" strokeWidth="1.5" />
-
-                    {/* Pot body */}
-                    <path d="M 90 90 L 230 90 L 210 165 L 110 165 Z" fill="#2d3748" stroke="#4a5568" strokeWidth="1.5" />
-                    {/* Soil */}
-                    <path d="M 94 94 L 226 94 L 208 145 L 112 145 Z" fill="#4a2e18" />
-
-                    {/* Capacitive Probe */}
-                    <rect x="120" y="98" width="10" height="42" rx="2" fill="#1a202c" stroke="#00c06d" strokeWidth="1.2" />
-                    {/* Sub-surface Tube */}
-                    <path d="M 190 90 L 190 135 L 170 135" fill="none" stroke="#06b6d4" strokeWidth="2.5" strokeLinecap="round" />
-                    <circle cx="170" cy="135" r="3" fill="#06b6d4" />
-
-                    {/* Reservoir */}
-                    <rect x="112" y="145" width="96" height="18" fill="#1a365d" />
-                    <rect
-                      x="112"
-                      y={163 - (16 * activePot.telemetry.tankLevelPercent) / 100}
-                      width="96"
-                      height={(16 * activePot.telemetry.tankLevelPercent) / 100}
-                      fill="#38bdf8"
-                      opacity="0.8"
-                    />
-
-                    {/* Location Callout Tag */}
-                    <g transform="translate(185, 95)">
-                      <rect x="0" y="0" width="76" height="28" rx="6" fill="#0b241b" stroke="#1d4e3b" strokeWidth="1" />
-                      <text x="8" y="12" fill="#a7f3d0" fontSize="8" fontWeight="600">Sub-Surface</text>
-                      <text x="8" y="22" fill="#ffffff" fontSize="9" fontWeight="700">Root Zone</text>
-                      <text x="56" y="18" fill="#00c06d" fontSize="9" fontWeight="700">92%</text>
-                    </g>
-                  </svg>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* 5. BOTTOM ROW: 2 COLUMNS (Section 8: Irrigation State & Reason, Section 16 & 18: Water Usage) */}
-        <div className="ref-bottom-grid">
-          {/* Left Stacked Column */}
-          <div>
-            {/* Pill Card 1: Pump Status & Closed-Loop Control (Sections 2, 8, 12, 19) */}
-            <div className="dark-pill-card" style={{ padding: '16px 20px', minHeight: '82px' }}>
-              <div
-                className="dark-pill-circle tnum"
-                style={{
-                  background: isPumping ? '#00c06d' : 'rgba(255,255,255,0.1)',
-                  color: '#ffffff',
-                  boxShadow: isPumping ? '0 0 12px rgba(0, 192, 109, 0.6)' : 'none',
-                  transition: 'all 300ms ease'
-                }}
-              >
-                {isPumping ? 'ON' : activePot.settings.autoWateringEnabled ? 'AUTO' : 'MAN'}
-              </div>
-
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                  <div className="dark-pill-title" style={{ margin: 0 }}>
-                    Pump Status: {isPumping ? '● ON (Irrigation Active)' : '● OFF (Irrigation Inactive)'}
-                  </div>
-                  {isPumping && (
-                    <span style={{ fontSize: '10px', color: '#6ee7b7', background: 'rgba(16, 185, 129, 0.2)', padding: '1px 6px', borderRadius: '6px', fontWeight: 700 }}>
-                      Delivering root hydration...
-                    </span>
-                  )}
-                </div>
-
-                <div className="dark-pill-sub" style={{ marginTop: '3px', color: isPumping ? '#a7f3d0' : 'rgba(255, 255, 255, 0.65)' }}>
-                  <strong>Reason:</strong> {getIrrigationStateReason(isPumping, activePot.telemetry, activePot.settings, lastTriggerType)}
-                </div>
-              </div>
-
-              {/* Manual Control Action Button & Auto Toggle */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                {isPumping ? (
-                  <button
-                    onClick={stopWatering}
-                    className="btn-white-pill"
-                    style={{ padding: '5px 12px', fontSize: '11px', background: '#ef4444', color: '#ffffff', borderColor: '#f87171' }}
-                    title="Stop pump immediately"
-                  >
-                    <Square size={11} fill="#ffffff" />
-                    <span>STOP</span>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => triggerWatering(activePot.settings.burstDurationSec || 6, 'Manual', 'Manual pulse initiated from Dashboard control')}
-                    disabled={activePot.telemetry.tankLevelPercent <= 5}
-                    className="btn-white-pill"
-                    style={{ padding: '5px 12px', fontSize: '11px' }}
-                    title={activePot.telemetry.tankLevelPercent <= 5 ? 'Reservoir is empty' : 'Start manual irrigation pulse'}
-                  >
-                    <Play size={11} color="#00c06d" fill="#00c06d" />
-                    <span>START</span>
-                  </button>
-                )}
-
-                <div
-                  className="switch-container"
-                  onClick={() =>
-                    handleUpdateSettings({
-                      ...activePot.settings,
-                      autoWateringEnabled: !activePot.settings.autoWateringEnabled
-                    })
-                  }
-                  title="Toggle Autonomous Closed-Loop Irrigation"
-                >
-                  <div className={`switch-track ${activePot.settings.autoWateringEnabled ? 'active' : ''}`}>
-                    <div className="switch-thumb" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Pill Card 2: White Pill with Green Ring (Matching Reservoir Level) */}
-            <div className="white-pill-card">
-              <div className="white-pill-circle tnum">
-                {activePot.telemetry.tankLevelPercent}%
-              </div>
-              <div style={{ flex: 1 }}>
-                <div className="white-pill-title">Water Level in Reservoir Tank</div>
-                <div className="white-pill-sub">
-                  {activePot.telemetry.tankCurrentMl} mL remaining • Dry-run pump lockout armed
-                </div>
-              </div>
-              <button
-                onClick={() => {
-                  setPots((prev) =>
-                    prev.map((p) =>
-                      p.id === activePotId
-                        ? { ...p, telemetry: { ...p.telemetry, tankLevelPercent: 100, tankCurrentMl: 1500 } }
-                        : p
-                    )
-                  );
-                  addToast('Reservoir refilled to 1500 mL (100%)!', 'success');
-                }}
-                className="btn-white-pill"
-                style={{ padding: '5px 12px', fontSize: '11px' }}
-              >
-                Refill
-              </button>
-            </div>
-          </div>
-
-          {/* Right Column: Vibrant Forest Green Hero Card (Sections 16 & 18: Water Savings & Usage) */}
-          <div className="green-hero-card">
-            {/* Background Botanical Leaves Vector Silhouette */}
-            <svg className="hero-leaves-bg" viewBox="0 0 200 160" fill="none">
-              <path
-                d="M100 160 C90 100 130 50 190 20 C180 80 150 130 100 160 Z"
-                fill="#10b981"
-                opacity="0.35"
-              />
-              <path
-                d="M60 160 C50 110 80 70 140 40 C130 90 100 140 60 160 Z"
-                fill="#34d399"
-                opacity="0.25"
-              />
-              <path
-                d="M140 160 C135 120 160 85 200 60 C195 105 175 140 140 160 Z"
-                fill="#059669"
-                opacity="0.3"
-              />
-            </svg>
-
-            {/* Top Bar inside Green Card */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 2 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span className="hero-tag-pill">
-                  🌿 BotanIQ Precision
-                </span>
-                <span className="hero-tag-pill" style={{ background: 'rgba(255,255,255,0.08)' }}>
-                  Sub-Surface Drip
-                </span>
-              </div>
-              <button
-                onClick={() => setIsWaterSavingsOpen(true)}
-                style={{ background: 'transparent', border: 'none', color: '#ffffff', cursor: 'pointer' }}
-                title="View full research audit"
-              >
-                <ArrowUpRight size={20} />
-              </button>
-            </div>
-
-            {/* Main Headline */}
-            <div style={{ zIndex: 2 }}>
-              <h2 className="hero-title">
-                61.9% Water Conserved (Estimated)
-              </h2>
-              <p style={{ fontSize: '12px', opacity: 0.85, marginTop: '2px', maxWidth: '300px' }}>
-                Closed-loop root-zone delivery minimizes surface evaporation and drainage runoff.
-              </p>
-            </div>
-
-            {/* Floating Tags & Footer (Matching avatars + Ecology Systems badge in reference) */}
-            <div className="hero-footer-stats">
-              <span className="hero-tag-pill">
-                Capacitive Sensor (Hrisko)
-              </span>
-              <span className="hero-tag-pill">
-                VPD Transpiration Sync
-              </span>
-              <span style={{ fontSize: '11px', opacity: 0.8, marginLeft: 'auto' }}>
-                Today: {waterMetrics.waterTodayMl} mL (Est.) • ~545 mL / pot / wk saved (Est.)
-              </span>
-            </div>
-          </div>
-        </div>
-      </>
-    )}
-
-    {/* 2. VIEW: TELEMETRY ANALYTICS */}
+        {/* 2. VIEW: TELEMETRY ANALYTICS */}
     {activeNav === 'analytics' && (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Top 4 KPI Stat Cards */}
@@ -2066,6 +1413,22 @@ export default function App() {
       <WaterSavingsModal
         isOpen={isWaterSavingsOpen}
         onClose={() => setIsWaterSavingsOpen(false)}
+      />
+
+      <ThresholdModal
+        isOpen={isThresholdModalOpen}
+        onClose={() => setIsThresholdModalOpen(false)}
+        pot={activePot}
+        onUpdateSettings={handleUpdateSettings}
+        addToast={addToast}
+      />
+
+      <SpeciesModal
+        isOpen={isSpeciesModalOpen}
+        onClose={() => setIsSpeciesModalOpen(false)}
+        activePresetId={activePot.plantPresetId}
+        onSelectPreset={handleApplyPreset}
+        addToast={addToast}
       />
 
       <HardwareSimulator
