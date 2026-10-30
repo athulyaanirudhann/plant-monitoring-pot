@@ -2,7 +2,7 @@
 
 /* LIGHT THEME (Default) - Approved Palette:
    #046A38 EMERALD GREEN
-   #F9EBD7 WARM IVORY
+   #F8FAF9 CRISP OFF-WHITE (VERY LIGHT, CLOSE TO WHITE)
    #1F3B2E PINE GREEN
    #E34222 VIBRANT RED
    WHITE #FFFFFF
@@ -12,7 +12,7 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* HSL shadcn compatibility variables for components */
-  --background: 35 68% 91%; /* #F9EBD7 Warm Ivory */
+  --background: 150 14% 98%; /* #F8FAF9 Crisp Light Off-White (Very light, close to white) */
   --foreground: 152 31% 18%; /* #1F3B2E Pine Green */
   --card: 0 0% 100%; /* #FFFFFF Crisp Pure White */
   --card-foreground: 152 31% 18%; /* #1F3B2E Pine Green */
@@ -20,16 +20,16 @@
   --popover-foreground: 152 31% 18%;
   --primary: 151 93% 22%; /* #046A38 Emerald Green */
   --primary-foreground: 0 0% 100%;
-  --secondary: 35 45% 85%;
+  --secondary: 150 10% 94%;
   --secondary-foreground: 152 31% 18%;
-  --muted: 35 38% 86%;
+  --muted: 150 8% 95%;
   --muted-foreground: 152 22% 38%;
-  --accent: 35 45% 87%;
+  --accent: 150 10% 95%;
   --accent-foreground: 151 93% 22%;
   --destructive: 10 78% 51%; /* #E34222 Vibrant Red */
   --destructive-foreground: 0 0% 100%;
-  --border: 152 20% 84%;
-  --input: 152 20% 86%;
+  --border: 152 14% 88%;
+  --input: 152 14% 90%;
   --ring: 151 93% 22%;
   --radius: 16px;
 
@@ -41,10 +41,10 @@
   --sidebar-text: #c2d9ce;
   --sidebar-text-active: #ffffff;
   
-  --canvas-bg: #F9EBD7; /* #F9EBD7 Warm Ivory Canvas */
+  --canvas-bg: #F8FAF9; /* Crisp clean off-white (very light, close to white, zero yellow/beige) */
   --card-bg: #ffffff; /* Crisp White */
-  --card-border: rgba(31, 59, 46, 0.12);
-  --card-shadow: 0 4px 20px -2px rgba(31, 59, 46, 0.06);
+  --card-border: rgba(31, 59, 46, 0.08);
+  --card-shadow: 0 4px 20px -2px rgba(31, 59, 46, 0.05);
 
   --text-main: #1F3B2E; /* Pine Green text for superior contrast and botanical cohesion */
   --text-muted: #4a6c5d;
@@ -56,21 +56,21 @@
   --accent-cyan: #1F3B2E;
   --accent-amber: #1F3B2E;
 
-  --gauge-track: rgba(31, 59, 46, 0.1);
+  --gauge-track: rgba(31, 59, 46, 0.08);
 
   --dark-pill-bg: #1F3B2E; /* #1F3B2E Pine Green */
   --dark-pill-text: #ffffff;
   --white-pill-bg: #ffffff; /* White */
-  --white-pill-border: rgba(31, 59, 46, 0.14);
+  --white-pill-border: rgba(31, 59, 46, 0.1);
   --white-pill-text: #1F3B2E;
 
   --hero-bg: linear-gradient(135deg, #1F3B2E 0%, #046A38 100%);
   --modal-bg: #ffffff;
-  --modal-border: rgba(31, 59, 46, 0.14);
+  --modal-border: rgba(31, 59, 46, 0.1);
   --modal-overlay: rgba(31, 59, 46, 0.72);
 
-  --subtle-input-bg: rgba(249, 235, 215, 0.55);
-  --table-hover: rgba(249, 235, 215, 0.7);
+  --subtle-input-bg: rgba(31, 59, 46, 0.035);
+  --table-hover: rgba(31, 59, 46, 0.03);
 
   --radius-window: 0px;
   --radius-card: 14px;
@@ -80,19 +80,19 @@
 /* DARK THEME (Shiftable with theme toggle) */
 [data-theme='dark'] {
   --background: 152 35% 10%;
-  --foreground: 35 60% 92%; /* #F9EBD7 Warm Ivory in dark mode */
+  --foreground: 0 0% 96%; /* Crisp light text */
   --card: 152 31% 18%; /* #1F3B2E Pine Green */
-  --card-foreground: 35 60% 92%;
+  --card-foreground: 0 0% 96%;
   --popover: 152 31% 18%;
-  --popover-foreground: 35 60% 92%;
+  --popover-foreground: 0 0% 96%;
   --primary: 151 93% 32%; /* #046A38 Emerald Green */
   --primary-foreground: 0 0% 100%;
   --secondary: 152 28% 14%;
-  --secondary-foreground: 35 60% 92%;
+  --secondary-foreground: 0 0% 96%;
   --muted: 152 28% 14%;
-  --muted-foreground: 35 25% 70%;
+  --muted-foreground: 152 15% 72%;
   --accent: 152 28% 14%;
-  --accent-foreground: 35 60% 92%;
+  --accent-foreground: 0 0% 96%;
   --destructive: 10 78% 51%; /* #E34222 Vibrant Red */
   --destructive-foreground: 0 0% 100%;
   --border: 152 20% 24%;
@@ -109,30 +109,30 @@
   
   --canvas-bg: #162c22;
   --card-bg: #1F3B2E; /* #1F3B2E Pine Green */
-  --card-border: rgba(249, 235, 215, 0.12);
+  --card-border: rgba(255, 255, 255, 0.1);
   --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
 
-  --text-main: #F9EBD7; /* Warm Ivory text on dark background */
+  --text-main: #f3f7f5; /* Crisp Light Text */
   --text-muted: #cfc2af;
   --text-light: #9f9483;
 
   --accent-green: #078c4b;
   --accent-green-subtle: rgba(4, 106, 56, 0.25);
   --accent-coral: #E34222;
-  --accent-cyan: #F9EBD7;
+  --accent-cyan: #f3f7f5;
   --accent-amber: #c2d9ce;
 
-  --gauge-track: rgba(249, 235, 215, 0.1);
+  --gauge-track: rgba(255, 255, 255, 0.1);
 
   --dark-pill-bg: #12241c;
   --dark-pill-text: #ffffff;
   --white-pill-bg: #264738;
-  --white-pill-border: rgba(249, 235, 215, 0.15);
-  --white-pill-text: #F9EBD7;
+  --white-pill-border: rgba(255, 255, 255, 0.12);
+  --white-pill-text: #f3f7f5;
 
   --hero-bg: linear-gradient(135deg, #12241c 0%, #1F3B2E 50%, #046A38 100%);
   --modal-bg: #1F3B2E;
-  --modal-border: rgba(249, 235, 215, 0.15);
+  --modal-border: rgba(255, 255, 255, 0.12);
   --modal-overlay: rgba(0, 0, 0, 0.85);
 
   --subtle-input-bg: #1a3529;
@@ -146,17 +146,17 @@
   transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
 }
 
-/* CUSTOM BOTANICAL DOT CURSOR (#046A38 EMERALD GREEN, #1F3B2E PINE GREEN, #F9EBD7 WARM IVORY) */
+/* CUSTOM BOTANICAL DOT CURSOR (#046A38 EMERALD GREEN, #1F3B2E PINE GREEN, WHITE #FFFFFF) */
 html, body, *, *::before, *::after {
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='6.5' fill='%23046A38' fill-opacity='0.24'/%3E%3Ccircle cx='9' cy='9' r='4' fill='%231F3B2E' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E") 9 9, auto;
 }
 
-/* Interactive elements: expanded emerald dot with warm ivory tactile stroke */
+/* Interactive elements: expanded emerald dot with crisp white tactile stroke */
 button, a, input, select, textarea, [role="button"],
 .btn, .btn-black-pill, .btn-white-pill, .theme-toggle-pill,
 .sidebar-nav-item, .sidebar-theme-switch, .switch-container,
 .species-row, .nav-tab-btn, .range-slider, [tabindex="0"] {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='%23046A38' fill-opacity='0.28'/%3E%3Ccircle cx='12' cy='12' r='4.8' fill='%23046A38' stroke='%23F9EBD7' stroke-width='1.4'/%3E%3C/svg%3E") 12 12, pointer !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='%23046A38' fill-opacity='0.28'/%3E%3Ccircle cx='12' cy='12' r='4.8' fill='%23046A38' stroke='%23ffffff' stroke-width='1.4'/%3E%3C/svg%3E") 12 12, pointer !important;
 }
 
 /* Active pressed state: slightly compact pine green dot for click feedback */
@@ -166,7 +166,7 @@ button:active, a:active, [role="button"]:active, .switch-container:active {
 
 /* Dark Theme Variant of the Botanical Dot Cursor */
 [data-theme='dark'], [data-theme='dark'] * {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='6.5' fill='%23046A38' fill-opacity='0.35'/%3E%3Ccircle cx='9' cy='9' r='4' fill='%23046A38' stroke='%23F9EBD7' stroke-width='1.2'/%3E%3C/svg%3E") 9 9, auto;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='6.5' fill='%23046A38' fill-opacity='0.35'/%3E%3Ccircle cx='9' cy='9' r='4' fill='%23046A38' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E") 9 9, auto;
 }
 
 [data-theme='dark'] button, 
@@ -185,11 +185,11 @@ button:active, a:active, [role="button"]:active, .switch-container:active {
 [data-theme='dark'] .species-row, 
 [data-theme='dark'] .nav-tab-btn, 
 [data-theme='dark'] .range-slider {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='%23046A38' fill-opacity='0.35'/%3E%3Ccircle cx='12' cy='12' r='4.8' fill='%23046A38' stroke='%23F9EBD7' stroke-width='1.4'/%3E%3C/svg%3E") 12 12, pointer !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='%23046A38' fill-opacity='0.35'/%3E%3Ccircle cx='12' cy='12' r='4.8' fill='%23046A38' stroke='%23ffffff' stroke-width='1.4'/%3E%3C/svg%3E") 12 12, pointer !important;
 }
 
 [data-theme='dark'] button:active, [data-theme='dark'] a:active {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3.2' fill='%231F3B2E' stroke='%23F9EBD7' stroke-width='1.2'/%3E%3C/svg%3E") 8 8, pointer !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3.2' fill='%231F3B2E' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E") 8 8, pointer !important;
 }
 
 ::selection {
