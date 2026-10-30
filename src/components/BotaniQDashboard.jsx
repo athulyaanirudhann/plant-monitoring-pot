@@ -351,14 +351,6 @@ export default function BotaniQDashboard({
               </div>
             </div>
           </div>
-
-          {/* Corner Leaf Decoration */}
-          <svg className="corner-leaf-decor" viewBox="0 0 100 100" fill="none">
-            <path
-              d="M 10 90 C 20 50 60 20 90 10 C 80 50 50 80 10 90 Z"
-              fill="var(--accent-green)"
-            />
-          </svg>
         </div>
 
         {/* Middle Card 2: Sensor Trends Multi-Line Chart */}
@@ -586,18 +578,6 @@ export default function BotaniQDashboard({
               <Droplet size={20} color="var(--accent-green)" />
               <span>Water Reservoir</span>
             </div>
-            <span
-              style={{
-                fontSize: '11px',
-                fontWeight: 700,
-                color: 'var(--accent-green)',
-                background: 'rgba(4, 106, 56, 0.08)',
-                padding: '2px 8px',
-                borderRadius: '4px'
-              }}
-            >
-              Optimal Level
-            </span>
           </div>
 
           <div className="widget-content-layout">
@@ -609,12 +589,20 @@ export default function BotaniQDashboard({
               />
             </div>
             <div className="widget-info-col">
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                  <span className="widget-headline-val">
-                    {activePot?.telemetry?.tankLevelPercent || 78}%
-                  </span>
-                  <span className="widget-badge-tag success">Tank Full</span>
+              <div className="reservoir-primary-stat">
+                <span className="widget-headline-val">
+                  {activePot?.telemetry?.tankLevelPercent || 78}%
+                </span>
+                <span className="reservoir-volume-text">
+                  {(((activePot?.telemetry?.tankLevelPercent || 78) * 1.5) / 100).toFixed(2)} L / 1.50 L
+                </span>
+              </div>
+              <div className="reservoir-meter-row">
+                <div className="widget-meter-track" title={`Reservoir Level: ${activePot?.telemetry?.tankLevelPercent || 78}%`}>
+                  <div
+                    className="widget-meter-fill"
+                    style={{ width: `${activePot?.telemetry?.tankLevelPercent || 78}%` }}
+                  />
                 </div>
                 <button
                   onClick={() => {
@@ -630,46 +618,10 @@ export default function BotaniQDashboard({
                   className="widget-action-btn"
                   title="Refill reservoir tank to 100%"
                 >
-                  Refill Tank
+                  Refill
                 </button>
               </div>
-              <div className="widget-sub-metric">
-                <span>{(((activePot?.telemetry?.tankLevelPercent || 78) * 1.5) / 100).toFixed(2)} L of 1.50 L Reservoir Capacity</span>
-              </div>
-              <div className="widget-meter-track" title={`Reservoir Level: ${activePot?.telemetry?.tankLevelPercent || 78}%`}>
-                <div
-                  className="widget-meter-fill"
-                  style={{ width: `${activePot?.telemetry?.tankLevelPercent || 78}%` }}
-                />
-              </div>
             </div>
-          </div>
-
-          {/* Quick Telemetry Specs Strip */}
-          <div className="irrigation-status-strip">
-            <div className="status-strip-col">
-              <span className="strip-label">Daily Avg</span>
-              <span className="strip-val">~180 mL</span>
-            </div>
-            <div className="status-strip-divider" />
-            <div className="status-strip-col">
-              <span className="strip-label">Remaining</span>
-              <span className="strip-val">4.2 Days</span>
-            </div>
-            <div className="status-strip-divider" />
-            <div className="status-strip-col">
-              <span className="strip-label">Safe Margin</span>
-              <span className="strip-val">&gt; 10% (150 mL)</span>
-            </div>
-          </div>
-
-          {/* Bottom Autonomy Vital Chip */}
-          <div className="health-vital-summary">
-            <span>Autonomy: <strong>Safe Reserve</strong></span>
-            <span style={{ color: 'var(--accent-green)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-green)', display: 'inline-block' }} />
-              Pump Armed
-            </span>
           </div>
         </div>
 
@@ -680,18 +632,6 @@ export default function BotaniQDashboard({
               <Leaf size={20} color="var(--accent-green)" />
               <span>Species Presets</span>
             </div>
-            <span
-              style={{
-                fontSize: '11px',
-                fontWeight: 700,
-                color: 'var(--accent-green)',
-                background: 'rgba(4, 106, 56, 0.08)',
-                padding: '2px 8px',
-                borderRadius: '4px'
-              }}
-            >
-              Active Profile
-            </span>
           </div>
 
           <div className="widget-content-layout">
@@ -703,71 +643,22 @@ export default function BotaniQDashboard({
               />
             </div>
             <div className="widget-info-col">
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-                <div className="widget-species-title-group">
-                  <div className="widget-species-name">
-                    {activePot?.preset ? activePot.preset.commonName.split('/')[0] : 'Swiss Cheese Plant'}
-                  </div>
-                  <div className="widget-species-sub">
-                    Monstera Deliciosa • Tropical Foliage
-                  </div>
-                </div>
+              <div className="species-name-bold">
+                {activePot?.preset ? activePot.preset.commonName.split('/')[0] : 'Swiss Cheese Plant'}
+              </div>
+              <div className="species-target-row">
+                <span className="species-target-band">
+                  {activePot?.settings?.thresholdLow || 32}% – {activePot?.settings?.thresholdHigh || 58}%
+                </span>
                 <button
                   onClick={() => setIsSpeciesModalOpen(true)}
                   className="widget-action-btn"
                   title="Change botanical species preset"
                 >
-                  Change Preset
+                  Change
                 </button>
               </div>
-              <div className="widget-sub-metric">
-                <span>Target Range: <strong>{activePot?.settings?.thresholdLow || 32}% – {activePot?.settings?.thresholdHigh || 58}%</strong></span>
-                <span className="widget-badge-tag subtle">Ideal</span>
-              </div>
-              <div
-                className="widget-range-track"
-                title={`Target Band: ${activePot?.settings?.thresholdLow || 32}% – ${activePot?.settings?.thresholdHigh || 58}%, Live Moisture: ${activePot?.telemetry?.soilMoisture || 42.5}%`}
-              >
-                <div
-                  className="widget-range-band"
-                  style={{
-                    left: `${activePot?.settings?.thresholdLow || 32}%`,
-                    width: `${(activePot?.settings?.thresholdHigh || 58) - (activePot?.settings?.thresholdLow || 32)}%`
-                  }}
-                />
-                <div
-                  className="widget-range-pin"
-                  style={{ left: `${Math.min(96, Math.max(4, activePot?.telemetry?.soilMoisture || 42.5))}%` }}
-                />
-              </div>
             </div>
-          </div>
-
-          {/* Quick Telemetry Specs Strip */}
-          <div className="irrigation-status-strip">
-            <div className="status-strip-col">
-              <span className="strip-label">Root Dose</span>
-              <span className="strip-val">{activePot?.settings?.waterPerCycleMl || 45} mL</span>
-            </div>
-            <div className="status-strip-divider" />
-            <div className="status-strip-col">
-              <span className="strip-label">Pulse Burst</span>
-              <span className="strip-val">{activePot?.settings?.burstDurationSec || 8}s</span>
-            </div>
-            <div className="status-strip-divider" />
-            <div className="status-strip-col">
-              <span className="strip-label">Soak Cycle</span>
-              <span className="strip-val">120 mins</span>
-            </div>
-          </div>
-
-          {/* Bottom Botanical Vital Chip */}
-          <div className="health-vital-summary">
-            <span>Botanical Profile: <strong>High Aeration</strong></span>
-            <span style={{ color: 'var(--accent-green)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-green)', display: 'inline-block' }} />
-              Active Profile
-            </span>
           </div>
         </div>
 
@@ -780,17 +671,7 @@ export default function BotaniQDashboard({
             </div>
             <button
               onClick={() => setActiveNav('logs')}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                fontSize: '11.5px',
-                fontWeight: 600,
-                color: 'var(--text-main)',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}
+              className="recent-activity-view-all"
               title="View complete actuation and telemetry logs"
             >
               <span>View All</span>
@@ -801,68 +682,25 @@ export default function BotaniQDashboard({
           <div className="activity-feed-list">
             <div className="activity-feed-item">
               <span className="activity-dot green" />
-              <div className="activity-text-col">
-                <span className="activity-text-title">{isPumping ? 'Pump currently active' : 'Pump cycle completed'}</span>
-                <span className="activity-text-desc">Delivered 45 mL to root zone</span>
-              </div>
+              <span className="activity-clean-text">{isPumping ? 'Pump currently active' : 'Pump cycle completed'}</span>
               <span className="activity-time-stamp">10:12 AM</span>
             </div>
             <div className="activity-feed-item">
               <span className="activity-dot dark" />
-              <div className="activity-text-col">
-                <span className="activity-text-title">Sensor telemetry synced</span>
-                <span className="activity-text-desc">Moisture 42.5% • 25.2°C • 2,450 Lux</span>
-              </div>
+              <span className="activity-clean-text">Sensor telemetry synced</span>
               <span className="activity-time-stamp">10:12 AM</span>
             </div>
             <div className="activity-feed-item">
               <span className="activity-dot pine" />
-              <div className="activity-text-col">
-                <span className="activity-text-title">Threshold safety verified</span>
-                <span className="activity-text-desc">All parameters within optimal band</span>
-              </div>
+              <span className="activity-clean-text">Threshold safety verified</span>
               <span className="activity-time-stamp">09:50 AM</span>
             </div>
             <div className="activity-feed-item">
               <span className="activity-dot pine" />
-              <div className="activity-text-col">
-                <span className="activity-text-title">MQTT node heartbeat</span>
-                <span className="activity-text-desc">ESP32 online • RSSI -58 dBm</span>
-              </div>
+              <span className="activity-clean-text">MQTT node heartbeat</span>
               <span className="activity-time-stamp">09:15 AM</span>
             </div>
           </div>
-
-          {/* Activity Footer Chip */}
-          <div className="activity-footer-chip">
-            <span>ESP32 Telemetry Node: <strong>#node-1974</strong></span>
-            <span style={{ color: 'var(--accent-green)', fontWeight: 700 }}>● 100% Uptime</span>
-          </div>
-
-          {/* Decorative Botanical Leaf in bottom-right */}
-          <svg
-            style={{
-              position: 'absolute',
-              bottom: '-10px',
-              right: '-10px',
-              width: '75px',
-              height: '75px',
-              opacity: 0.18,
-              pointerEvents: 'none'
-            }}
-            viewBox="0 0 100 100"
-            fill="none"
-          >
-            <path
-              d="M 90 90 C 70 50 40 30 10 20 C 30 60 60 80 90 90 Z"
-              fill="var(--accent-green)"
-            />
-            <path
-              d="M 90 90 C 50 70 30 40 20 10 C 60 30 80 60 90 90 Z"
-              fill="var(--accent-green)"
-              opacity="0.6"
-            />
-          </svg>
         </div>
       </div>
     </div>
