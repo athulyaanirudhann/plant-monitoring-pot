@@ -1278,12 +1278,9 @@ html, body {
 .dashboard-content-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 10px;
-  height: 100%;
-  max-height: 100%;
+  gap: 12px;
   position: relative;
-  min-height: 0;
+  width: 100%;
 }
 
 .dashboard-header-hero {
@@ -1583,32 +1580,28 @@ html, body {
 .mid-control-grid {
   display: grid;
   grid-template-columns: 1.15fr 1.35fr 0.95fr;
-  gap: 10px;
+  gap: 12px;
   position: relative;
   z-index: 1;
-  flex: 1.15;
-  min-height: 0;
 }
 
 @media (max-width: 1100px) {
   .mid-control-grid {
     grid-template-columns: 1fr;
-    flex: none;
   }
 }
 
 .mockup-card {
   background: var(--card-bg);
   border-radius: var(--radius-card);
-  padding: 10px 14px;
+  padding: 13px 15px;
   border: 1px solid var(--card-border);
   box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   position: relative;
   overflow: hidden;
-  min-height: 0;
+  gap: 8px;
 }
 
 .mockup-card-header {
@@ -1924,17 +1917,14 @@ html, body {
 .bottom-widgets-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 12px;
   position: relative;
   z-index: 1;
-  flex: 1.05;
-  min-height: 0;
 }
 
 @media (max-width: 992px) {
   .bottom-widgets-grid {
     grid-template-columns: 1fr;
-    flex: none;
   }
 }
 
