@@ -9,7 +9,7 @@ export default function AlertsCenter({ alerts, onDismissAlert, onAcknowledgeAler
       <div className="card-header" style={{ marginBottom: alerts.length > 0 ? '12px' : 0 }}>
         <div>
           <h3 className="card-title">
-            <Bell size={15} color="#f59e0b" />
+            <Bell size={15} color="#1F3B2E" />
             System Notifications & Alerts
           </h3>
           <p className="card-subtitle">

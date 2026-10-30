@@ -242,14 +242,14 @@ export default function HistoryChart({
                 y1={thresholdY}
                 x2={width - padding.right}
                 y2={thresholdY}
-                stroke="#f59e0b"
+                stroke="#1F3B2E"
                 strokeWidth="1.2"
                 strokeDasharray="4 3"
               />
               <text
                 x={width - padding.right - 6}
                 y={thresholdY - 5}
-                fill="#f59e0b"
+                fill="#1F3B2E"
                 fontSize="10"
                 fontWeight="500"
                 textAnchor="end"

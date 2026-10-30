@@ -74,10 +74,10 @@ export default function WaterSavingsModal({ isOpen, onClose }) {
           <div style={{ marginBottom: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
               <span style={{ color: 'hsl(var(--muted-foreground))' }}>2. Clock Timer Irrigators (Fixed Blind Interval)</span>
-              <strong className="tnum" style={{ color: '#f59e0b' }}>640 mL / week</strong>
+              <strong className="tnum" style={{ color: '#1F3B2E' }}>640 mL / week</strong>
             </div>
             <div className="meter-track" style={{ height: '8px' }}>
-              <div className="meter-fill" style={{ width: `${(640 / 880) * 100}%`, background: '#f59e0b' }} />
+              <div className="meter-fill" style={{ width: `${(640 / 880) * 100}%`, background: '#1F3B2E' }} />
             </div>
           </div>
 

@@ -115,7 +115,7 @@ export default function ActuationLogs({ logs, onExportCsv }) {
 
                     <td>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }} className="tnum">
-                        <span style={{ color: '#f59e0b', fontWeight: 600 }}>{log.moistureBefore}%</span>
+                        <span style={{ color: '#1F3B2E', fontWeight: 600 }}>{log.moistureBefore}%</span>
                         <ArrowRight size={10} color="hsl(var(--muted-foreground))" />
                         <span style={{ color: '#10b981', fontWeight: 600 }}>{log.moistureAfter}%</span>
                         <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}>(+{moistureGain}%)</span>

@@ -166,7 +166,7 @@ export default function HardwareCenter({
       name: 'DHT22 Digital Environmental Sensor',
       pin: 'GPIO 21 (Single-Bus Digital)',
       type: 'Bidirectional Digital (with 10kΩ pullup)',
-      color: '#f59e0b',
+      color: '#046A38',
       formula: 'Calibrated capacitive humidity & NTC thermistor',
       desc: 'Monitors ambient room temperature (±0.5°C) and relative humidity (±2% RH). Critical for calculating Vapor Pressure Deficit (VPD) and daytime stomatal transpiration rates.'
     },
@@ -174,7 +174,7 @@ export default function HardwareCenter({
       name: 'LDR Photoresistor Illumination Sensor',
       pin: 'GPIO 35 (ADC1_CH7)',
       type: '12-bit Analog In (0–3.3V)',
-      color: '#eab308',
+      color: '#4A6C5D',
       formula: 'Voltage divider with 10kΩ fixed pull-down resistor',
       desc: 'Measures ambient indoor photosynthetically active radiation (PAR/Lux). Triggers daytime transpiration compensation algorithms during intense illumination periods.'
     },
@@ -336,7 +336,7 @@ void loop() {
             borderColor: activeTab === 'serial' ? '#09261a' : 'var(--card-border)'
           }}
         >
-          <Terminal size={14} color={activeTab === 'serial' ? '#34d399' : '#f59e0b'} />
+          <Terminal size={14} color={activeTab === 'serial' ? '#34d399' : 'var(--text-main)'} />
           <span>Web Serial USB Link {isSerialConnected && '● LIVE'}</span>
         </button>
 
@@ -453,7 +453,7 @@ void loop() {
               </div>
 
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f59e0b', fontWeight: 700, fontSize: '13px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#046A38', fontWeight: 700, fontSize: '13px' }}>
                   <Sun size={16} />
                   Microclimate Sync
                 </div>
@@ -550,7 +550,7 @@ void loop() {
                 {[
                   { pin: 'VIN (5V)', y: 180, c: '#ef4444' },
                   { pin: 'GND', y: 205, c: '#64748b' },
-                  { pin: 'GPIO 21', y: 230, c: '#f59e0b', id: 'gpio21' },
+                  { pin: 'GPIO 21', y: 230, c: '#046A38', id: 'gpio21' },
                   { pin: 'GPIO 22', y: 255, c: '#0284c7', id: 'gpio22' },
                   { pin: 'GPIO 2', y: 280, c: '#10b981' }
                 ].map((p, idx) => (
@@ -585,14 +585,14 @@ void loop() {
                   style={{ cursor: 'pointer' }}
                   transform="translate(40, 290)"
                 >
-                  <rect x="0" y="0" width="180" height="90" rx="8" fill="#24210d" stroke="#eab308" strokeWidth="1.5" />
-                  <text x="12" y="24" fill="#fde047" fontSize="12" fontWeight="700">LDR Light Intensity Sensor</text>
+                  <rect x="0" y="0" width="180" height="90" rx="8" fill="#14261f" stroke="#4A6C5D" strokeWidth="1.5" />
+                  <text x="12" y="24" fill="#a7f3d0" fontSize="12" fontWeight="700">LDR Light Intensity Sensor</text>
                   <text x="12" y="40" fill="#94a3b8" fontSize="9">Photosynthetic Radiation (Lux)</text>
-                  <circle cx="155" cy="65" r="4" fill="#eab308" />
+                  <circle cx="155" cy="65" r="4" fill="#4A6C5D" />
                   <text x="12" y="68" fill="#e2e8f0" fontSize="10" fontWeight="600">SIG ─── GPIO35</text>
                 </g>
                 {/* Wire: LDR to GPIO35 */}
-                <path d="M 220 355 L 255 355 L 255 255 L 282 255" fill="none" stroke="#eab308" strokeWidth="2" strokeDasharray="4 2" />
+                <path d="M 220 355 L 255 355 L 255 255 L 282 255" fill="none" stroke="#4A6C5D" strokeWidth="2" strokeDasharray="4 2" />
 
                 {/* MODULE 3: DHT22 Environmental (Right Top) */}
                 <g
@@ -600,14 +600,14 @@ void loop() {
                   style={{ cursor: 'pointer' }}
                   transform="translate(580, 160)"
                 >
-                  <rect x="0" y="0" width="180" height="90" rx="8" fill="#261d0d" stroke="#f59e0b" strokeWidth="1.5" />
-                  <text x="12" y="24" fill="#fbbf24" fontSize="12" fontWeight="700">DHT22 Temp & Humidity</text>
+                  <rect x="0" y="0" width="180" height="90" rx="8" fill="#12261d" stroke="#046A38" strokeWidth="1.5" />
+                  <text x="12" y="24" fill="#34d399" fontSize="12" fontWeight="700">DHT22 Temp & Humidity</text>
                   <text x="12" y="40" fill="#94a3b8" fontSize="9">Calibrated Microclimate & VPD</text>
-                  <circle cx="25" cy="65" r="4" fill="#f59e0b" />
+                  <circle cx="25" cy="65" r="4" fill="#046A38" />
                   <text x="36" y="68" fill="#e2e8f0" fontSize="10" fontWeight="600">DATA ─── GPIO21</text>
                 </g>
                 {/* Wire: DHT22 to GPIO21 */}
-                <path d="M 580 225 L 545 225 L 545 230 L 518 230" fill="none" stroke="#f59e0b" strokeWidth="2" strokeDasharray="4 2" />
+                <path d="M 580 225 L 545 225 L 545 230 L 518 230" fill="none" stroke="#046A38" strokeWidth="2" strokeDasharray="4 2" />
 
                 {/* MODULE 4: 5V Pump & MOSFET Driver (Right Bottom) */}
                 <g

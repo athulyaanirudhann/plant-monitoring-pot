@@ -96,7 +96,7 @@ export default function BotaniQDashboard({
                   width: '7px',
                   height: '7px',
                   borderRadius: '50%',
-                  backgroundColor: 'var(--accent-coral)'
+                  backgroundColor: '#1F3B2E'
                 }}
               />
             )}
@@ -205,7 +205,7 @@ export default function BotaniQDashboard({
         {/* Card 3: Humidity */}
         <div className="metric-quad-card">
           <div className="metric-quad-header">
-            <div className="metric-icon-disc amber">
+            <div className="metric-icon-disc" style={{ background: 'rgba(31, 59, 46, 0.08)', color: '#1F3B2E' }}>
               <Sun size={19} />
             </div>
             <span className="metric-quad-label">Humidity</span>
@@ -384,11 +384,11 @@ export default function BotaniQDashboard({
               Moisture
             </span>
             <span>
-              <span className="legend-dot" style={{ background: '#f97316' }} />
+              <span className="legend-dot" style={{ background: '#1F3B2E' }} />
               Temperature
             </span>
             <span>
-              <span className="legend-dot" style={{ background: '#0284c7' }} />
+              <span className="legend-dot" style={{ background: '#4A6C5D' }} />
               Humidity
             </span>
           </div>
@@ -420,7 +420,7 @@ export default function BotaniQDashboard({
                 </g>
               ))}
 
-              {/* Moisture Spline (Green) */}
+              {/* Moisture Spline (Emerald Green) */}
               <path
                 d="M 35 48 C 70 54 110 38 150 36 C 200 34 240 50 280 44 C 320 38 350 48 390 42"
                 fill="none"
@@ -429,20 +429,20 @@ export default function BotaniQDashboard({
                 strokeLinecap="round"
               />
 
-              {/* Temperature Spline (Orange) */}
+              {/* Temperature Spline (Deep Pine Green) */}
               <path
                 d="M 35 68 C 80 72 130 64 170 58 C 220 52 260 68 300 60 C 340 54 370 66 390 74"
                 fill="none"
-                stroke="#f97316"
-                strokeWidth="2"
+                stroke="#1F3B2E"
+                strokeWidth="2.2"
                 strokeLinecap="round"
               />
 
-              {/* Humidity Spline (Blue) */}
+              {/* Humidity Spline (Dark Sage Green) */}
               <path
                 d="M 35 98 C 80 96 120 102 160 88 C 200 74 240 92 280 84 C 320 78 360 90 390 98"
                 fill="none"
-                stroke="#0284c7"
+                stroke="#4A6C5D"
                 strokeWidth="2"
                 strokeLinecap="round"
               />
@@ -652,12 +652,12 @@ export default function BotaniQDashboard({
               <span className="activity-time-stamp">10:12 AM</span>
             </div>
             <div className="activity-feed-item">
-              <span className="activity-dot blue" />
+              <span className="activity-dot dark" />
               <span className="activity-text-title">Sensor data updated</span>
               <span className="activity-time-stamp">10:12 AM</span>
             </div>
             <div className="activity-feed-item">
-              <span className="activity-dot orange" />
+              <span className="activity-dot pine" />
               <span className="activity-text-title">Soil moisture low (alert)</span>
               <span className="activity-time-stamp">09:50 AM</span>
             </div>

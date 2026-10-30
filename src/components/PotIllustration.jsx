@@ -145,9 +145,9 @@ export default function PotIllustration({ moisture, isPumping, tankLevel, plantP
             {/* Sensor electronics head */}
             <rect x="-2" y="0" width="20" height="15" rx="2" fill="#27272a" />
             {/* 3-pin wiring cable to ESP32 */}
-            <path d="M 8 0 Q 5 -15 20 -20" stroke="#f59e0b" strokeWidth="1.5" fill="none" />
-            <path d="M 8 0 Q 8 -15 23 -20" stroke="#ef4444" strokeWidth="1.5" fill="none" />
-            <path d="M 8 0 Q 11 -15 26 -20" stroke="#10b981" strokeWidth="1.5" fill="none" />
+            <path d="M 8 0 Q 5 -15 20 -20" stroke="#1F3B2E" strokeWidth="1.5" fill="none" />
+            <path d="M 8 0 Q 8 -15 23 -20" stroke="#1F3B2E" strokeWidth="1.5" fill="none" />
+            <path d="M 8 0 Q 11 -15 26 -20" stroke="#046A38" strokeWidth="1.5" fill="none" />
 
             {/* Dielectric moisture detection rings */}
             <circle cx="8" cy="48" r="16" stroke="rgba(16, 185, 129, 0.4)" strokeWidth="1" fill="none" strokeDasharray="3 3" />

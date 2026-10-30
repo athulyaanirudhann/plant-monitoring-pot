@@ -54,7 +54,7 @@
   --accent-green-subtle: rgba(4, 106, 56, 0.12);
   --accent-coral: #E34222; /* #E34222 Vibrant Red */
   --accent-cyan: #1F3B2E;
-  --accent-amber: #d97706;
+  --accent-amber: #1F3B2E;
 
   --gauge-track: rgba(31, 59, 46, 0.1);
 
@@ -120,7 +120,7 @@
   --accent-green-subtle: rgba(4, 106, 56, 0.25);
   --accent-coral: #E34222;
   --accent-cyan: #F9EBD7;
-  --accent-amber: #f59e0b;
+  --accent-amber: #c2d9ce;
 
   --gauge-track: rgba(249, 235, 215, 0.1);
 
@@ -498,7 +498,7 @@ html, body {
 }
 
 .mfg-dot.dot-orange {
-  background-color: #E34222;
+  background-color: #1F3B2E;
 }
 
 .mfg-dot.dot-grey {
@@ -1451,8 +1451,8 @@ html, body {
 }
 
 .metric-icon-disc.amber {
-  background: rgba(227, 66, 34, 0.1);
-  color: #d97706;
+  background: rgba(31, 59, 46, 0.08);
+  color: #1F3B2E;
 }
 
 .metric-quad-label {
@@ -1929,12 +1929,14 @@ html, body {
   box-shadow: 0 0 5px var(--accent-green);
 }
 
-.activity-dot.blue {
-  background-color: #0284c7;
+.activity-dot.blue,
+.activity-dot.dark {
+  background-color: #4A6C5D;
 }
 
-.activity-dot.orange {
-  background-color: var(--accent-coral);
+.activity-dot.orange,
+.activity-dot.pine {
+  background-color: #1F3B2E;
 }
 
 .activity-text-title {

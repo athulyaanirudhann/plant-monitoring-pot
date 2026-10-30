@@ -723,7 +723,7 @@ export default function App() {
                 className="btn-white-pill"
                 title="Simulate dry soil or faults"
               >
-                <Cpu size={14} color="#f59e0b" />
+                <Cpu size={14} color="var(--accent-green)" />
                 <span>Simulator</span>
               </button>
 
@@ -803,8 +803,8 @@ export default function App() {
                 <span style={{ color: '#00c06d', fontWeight: 600 }}>±1.2°C</span> diurnal stable
               </div>
             </div>
-            <div style={{ padding: '8px', background: '#fef3c7', borderRadius: '10px' }}>
-              <Cpu size={20} color="#f59e0b" />
+            <div style={{ padding: '8px', background: 'rgba(31, 59, 46, 0.08)', borderRadius: '10px' }}>
+              <Cpu size={20} color="#1F3B2E" />
             </div>
           </div>
 
@@ -1197,11 +1197,11 @@ export default function App() {
                 {waterMetrics.avgDurationSec} <span style={{ fontSize: '15px', color: '#647d72', fontWeight: 500 }}>sec</span>
               </div>
               <div className="ref-stat-sub">
-                <span style={{ color: '#f59e0b', fontWeight: 600 }}>Sub-surface drip</span> rate
+                <span style={{ color: '#1F3B2E', fontWeight: 600 }}>Sub-surface drip</span> rate
               </div>
             </div>
-            <div style={{ padding: '8px', background: '#fef3c7', borderRadius: '10px' }}>
-              <Sliders size={20} color="#f59e0b" />
+            <div style={{ padding: '8px', background: 'rgba(31, 59, 46, 0.08)', borderRadius: '10px' }}>
+              <Sliders size={20} color="#1F3B2E" />
             </div>
           </div>
         </div>

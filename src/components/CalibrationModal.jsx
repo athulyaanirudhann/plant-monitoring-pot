@@ -99,7 +99,7 @@ export default function CalibrationModal({
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '18px' }}>
           {/* Step 1: Dry Air */}
           <div style={{ padding: '12px', background: 'hsl(var(--muted) / 0.4)', border: '1px solid hsl(var(--border) / 0.6)', borderRadius: 'var(--radius)' }}>
-            <div style={{ fontSize: '12px', fontWeight: 600, color: '#f59e0b', marginBottom: '4px' }}>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: '#1F3B2E', marginBottom: '4px' }}>
               Step 1: Dry Air Reference (0%)
             </div>
             <p style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', marginBottom: '10px' }}>
