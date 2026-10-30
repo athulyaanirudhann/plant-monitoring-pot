@@ -1287,14 +1287,26 @@ html, body {
   top: -24px;
   right: -32px;
   width: 580px;
-  height: 140px;
+  height: 180px;
   background-image: url('/botanical_header.jpg');
   background-size: cover;
   background-position: right top;
   border-radius: 0;
   border-top-right-radius: 0;
-  mask-image: radial-gradient(circle at 85% 25%, black 45%, transparent 82%);
-  -webkit-mask-image: radial-gradient(circle at 85% 25%, black 45%, transparent 82%);
+  mask-image: radial-gradient(
+    ellipse at 100% 0%,
+    rgba(0, 0, 0, 1) 20%,
+    rgba(0, 0, 0, 0.82) 42%,
+    rgba(0, 0, 0, 0.35) 66%,
+    rgba(0, 0, 0, 0) 86%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse at 100% 0%,
+    rgba(0, 0, 0, 1) 20%,
+    rgba(0, 0, 0, 0.82) 42%,
+    rgba(0, 0, 0, 0.35) 66%,
+    rgba(0, 0, 0, 0) 86%
+  );
   opacity: 0.95;
   pointer-events: none;
   z-index: 0;
