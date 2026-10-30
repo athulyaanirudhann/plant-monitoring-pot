@@ -273,7 +273,7 @@ export default function BotaniQDashboard({
         <div className="mockup-card">
           <div className="mockup-card-header">
             <div className="mockup-card-title">
-              <Leaf size={16} color="var(--accent-green)" />
+              <Leaf size={20} color="var(--accent-green)" />
               <span>Plant Health</span>
             </div>
             <span
@@ -365,7 +365,7 @@ export default function BotaniQDashboard({
         <div className="mockup-card">
           <div className="mockup-card-header">
             <div className="mockup-card-title">
-              <BarChart2 size={18} color="var(--accent-green)" />
+              <BarChart2 size={20} color="var(--accent-green)" />
               <span>Sensor Trends</span>
             </div>
             <div className="time-range-pills">
@@ -484,7 +484,7 @@ export default function BotaniQDashboard({
         <div className="mockup-card">
           <div className="mockup-card-header">
             <div className="mockup-card-title">
-              <Droplet size={18} color="var(--accent-green)" />
+              <Droplet size={20} color="var(--accent-green)" />
               <span>Irrigation Control</span>
             </div>
             <span
@@ -586,7 +586,7 @@ export default function BotaniQDashboard({
         <div className="mockup-card">
           <div className="mockup-card-header">
             <div className="mockup-card-title">
-              <Droplet size={16} color="var(--accent-green)" />
+              <Droplet size={20} color="var(--accent-green)" />
               <span>Water Reservoir</span>
             </div>
             <span
@@ -652,7 +652,7 @@ export default function BotaniQDashboard({
         <div className="mockup-card">
           <div className="mockup-card-header">
             <div className="mockup-card-title">
-              <Leaf size={16} color="var(--accent-green)" />
+              <Leaf size={20} color="var(--accent-green)" />
               <span>Species Presets</span>
             </div>
             <span
@@ -706,7 +706,7 @@ export default function BotaniQDashboard({
         <div className="mockup-card">
           <div className="mockup-card-header">
             <div className="mockup-card-title">
-              <Activity size={18} color="var(--accent-green)" />
+              <Activity size={20} color="var(--accent-green)" />
               <span>Recent Activity</span>
             </div>
             <button

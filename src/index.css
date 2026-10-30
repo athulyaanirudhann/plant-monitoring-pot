@@ -1515,9 +1515,10 @@ html, body {
 }
 
 .metric-quad-label {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
 }
 
 .metric-quad-body {
@@ -1608,18 +1609,19 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   flex-shrink: 0;
 }
 
 .mockup-card-title {
-  font-size: 13.5px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 800;
   color: var(--text-main);
   display: flex;
   align-items: center;
-  gap: 7px;
-  letter-spacing: -0.01em;
+  gap: 9px;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
 }
 
 /* Plant Health Donut & Checkmarks */
