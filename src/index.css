@@ -1436,12 +1436,6 @@ html, body {
   min-height: 120px;
   position: relative;
   overflow: hidden;
-  transition: transform 180ms ease, box-shadow 180ms ease;
-}
-
-.metric-quad-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px -4px rgba(31, 59, 46, 0.08);
 }
 
 .metric-quad-header {
@@ -1848,12 +1842,6 @@ html, body {
   background: transparent;
   filter: drop-shadow(0 4px 10px rgba(31, 59, 46, 0.12));
   flex-shrink: 0;
-  transition: transform 0.25s ease, filter 0.25s ease;
-}
-
-.tank-render-img:hover {
-  transform: translateY(-2px) scale(1.03);
-  filter: drop-shadow(0 6px 14px rgba(31, 59, 46, 0.18));
 }
 
 .potted-plant-render-img {
@@ -1863,12 +1851,6 @@ html, body {
   background: transparent;
   filter: drop-shadow(0 4px 10px rgba(31, 59, 46, 0.12));
   flex-shrink: 0;
-  transition: transform 0.25s ease, filter 0.25s ease;
-}
-
-.potted-plant-render-img:hover {
-  transform: translateY(-2px) scale(1.03);
-  filter: drop-shadow(0 6px 14px rgba(31, 59, 46, 0.18));
 }
 
 .widget-info-col {
