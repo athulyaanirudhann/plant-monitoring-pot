@@ -31,7 +31,7 @@
   --border: 152 14% 88%;
   --input: 152 14% 90%;
   --ring: 151 93% 22%;
-  --radius: 16px;
+  --radius: 6px;
 
   /* Botanical Impeccable Theme Tokens */
   --outer-bg: #1F3B2E; /* Deep Pine Green */
@@ -73,8 +73,8 @@
   --table-hover: rgba(31, 59, 46, 0.03);
 
   --radius-window: 0px;
-  --radius-card: 14px;
-  --radius-pill: 9999px;
+  --radius-card: 6px;
+  --radius-pill: 6px;
 }
 
 /* DARK THEME (Shiftable with theme toggle) */
@@ -98,7 +98,7 @@
   --border: 152 20% 24%;
   --input: 152 20% 24%;
   --ring: 151 93% 32%;
-  --radius: 16px;
+  --radius: 6px;
 
   --outer-bg: #0d1a14;
   --sidebar-bg: #12241c;
@@ -337,7 +337,7 @@ html, body {
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  border-radius: 12px;
+  border-radius: 6px;
   font-size: 13.5px;
   font-weight: 500;
   color: var(--sidebar-text);
@@ -781,7 +781,7 @@ html, body {
 /* Stacked Pill Card 1: Deep Dark Forest Pill */
 .dark-pill-card {
   background-color: var(--dark-pill-bg);
-  border-radius: 36px;
+  border-radius: 6px;
   padding: 16px 20px;
   display: flex;
   align-items: center;
@@ -821,7 +821,7 @@ html, body {
 /* Stacked Pill Card 2: White/Themed Pill with Ring Progress */
 .white-pill-card {
   background-color: var(--white-pill-bg);
-  border-radius: 36px;
+  border-radius: 6px;
   padding: 16px 20px;
   display: flex;
   align-items: center;
@@ -965,7 +965,7 @@ html, body {
   background-color: var(--modal-bg);
   color: var(--text-main);
   border: 1px solid var(--modal-border);
-  border-radius: 20px;
+  border-radius: 8px;
   width: 100%;
   max-width: 640px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
@@ -985,7 +985,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: 14px;
+  border-radius: 6px;
   padding: 10px 16px;
   margin-bottom: 14px;
   font-size: 12.5px;
@@ -1036,7 +1036,7 @@ html, body {
   pointer-events: auto;
   background-color: var(--sidebar-bg);
   color: #ffffff;
-  border-radius: 12px;
+  border-radius: 6px;
   padding: 12px 18px;
   font-size: 13px;
   box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.25);
@@ -1057,7 +1057,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
-  border-radius: 12px;
+  border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
   margin-top: 14px;
@@ -1726,7 +1726,7 @@ html, body {
 .irrigation-inner-container {
   background: rgba(4, 106, 56, 0.08);
   border: 1px solid rgba(4, 106, 56, 0.15);
-  border-radius: 18px;
+  border-radius: 6px;
   padding: 16px;
   display: flex;
   align-items: center;
@@ -1743,7 +1743,7 @@ html, body {
 .pump-droplet-badge {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
+  border-radius: 6px;
   background: var(--accent-green);
   color: #ffffff;
   display: flex;

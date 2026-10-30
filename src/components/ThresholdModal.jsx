@@ -45,7 +45,7 @@ export default function ThresholdModal({
       <div
         style={{
           background: 'var(--card-bg)',
-          borderRadius: '24px',
+          borderRadius: '8px',
           width: '100%',
           maxWidth: '480px',
           padding: '28px',
@@ -172,7 +172,7 @@ export default function ThresholdModal({
               justifyContent: 'space-between',
               padding: '12px 16px',
               background: 'rgba(4, 106, 56, 0.06)',
-              borderRadius: '14px',
+              borderRadius: '6px',
               border: '1px solid rgba(4, 106, 56, 0.12)'
             }}
           >

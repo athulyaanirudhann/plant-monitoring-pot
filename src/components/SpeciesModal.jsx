@@ -29,7 +29,7 @@ export default function SpeciesModal({
       <div
         style={{
           background: 'var(--card-bg)',
-          borderRadius: '24px',
+          borderRadius: '8px',
           width: '100%',
           maxWidth: '560px',
           padding: '28px',
@@ -83,7 +83,7 @@ export default function SpeciesModal({
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   padding: '12px 16px',
-                  borderRadius: '16px',
+                  borderRadius: '6px',
                   background: isSelected ? 'rgba(4, 106, 56, 0.08)' : 'var(--subtle-input-bg)',
                   border: isSelected ? '1.5px solid var(--accent-green)' : '1px solid var(--card-border)',
                   cursor: 'pointer',
