@@ -450,18 +450,22 @@ html, body {
   flex: 1;
   min-width: 0;
   height: 100vh;
+  max-height: 100vh;
   background-color: var(--canvas-bg);
-  padding: 24px 32px;
+  padding: 12px 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
   overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  position: relative;
 }
 
 @media (max-width: 1024px) {
   .main-canvas {
     height: auto;
-    padding: 18px 14px;
+    max-height: none;
+    padding: 16px 14px;
   }
 }
 
@@ -1271,42 +1275,48 @@ html, body {
    ========================================================================== */
 
 /* Top Canvas Header Hero with Lush Foliage Banner */
+.dashboard-content-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  height: 100%;
+  max-height: 100%;
+  position: relative;
+  min-height: 0;
+}
+
 .dashboard-header-hero {
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  padding: 8px 0 16px 0;
-  min-height: 90px;
+  padding: 0 0 2px 0;
+  min-height: auto;
   border-radius: 0;
   overflow: visible;
+  flex-shrink: 0;
 }
 
 .dashboard-hero-foliage {
   position: absolute;
-  top: -24px;
-  right: -32px;
-  width: 580px;
-  height: 180px;
+  top: -12px;
+  right: -24px;
+  width: 480px;
+  height: 125px;
   background-image: url('/botanical_header.jpg');
   background-size: cover;
   background-position: right top;
   border-radius: 0;
   border-top-right-radius: 0;
-  mask-image: radial-gradient(
-    ellipse at 100% 0%,
-    rgba(0, 0, 0, 1) 20%,
-    rgba(0, 0, 0, 0.82) 42%,
-    rgba(0, 0, 0, 0.35) 66%,
-    rgba(0, 0, 0, 0) 86%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse at 100% 0%,
-    rgba(0, 0, 0, 1) 20%,
-    rgba(0, 0, 0, 0.82) 42%,
-    rgba(0, 0, 0, 0.35) 66%,
-    rgba(0, 0, 0, 0) 86%
-  );
+  mask-image: 
+    linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.4) 22%, rgba(0, 0, 0, 0.85) 48%, black 68%, black 100%),
+    linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.4) 15%, rgba(0, 0, 0, 0.85) 35%, black 60%, black 100%);
+  -webkit-mask-image: 
+    linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.4) 22%, rgba(0, 0, 0, 0.85) 48%, black 68%, black 100%),
+    linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.4) 15%, rgba(0, 0, 0, 0.85) 35%, black 60%, black 100%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
   opacity: 0.95;
   pointer-events: none;
   z-index: 0;
@@ -1318,19 +1328,19 @@ html, body {
 }
 
 .hero-greeting-title {
-  font-size: 32px;
+  font-size: 23px;
   font-weight: 800;
   letter-spacing: -0.03em;
   color: var(--text-main);
   line-height: 1.15;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .hero-greeting-sub {
-  font-size: 14.5px;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--text-muted);
 }
@@ -1407,9 +1417,10 @@ html, body {
 .top-metric-quad-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 10px;
   position: relative;
   z-index: 1;
+  flex-shrink: 0;
 }
 
 @media (max-width: 1200px) {
@@ -1427,13 +1438,13 @@ html, body {
 .metric-quad-card {
   background: var(--card-bg);
   border-radius: var(--radius-card);
-  padding: 18px 20px;
+  padding: 10px 14px;
   border: 1px solid var(--card-border);
   box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 120px;
+  min-height: 74px;
   position: relative;
   overflow: hidden;
 }
@@ -1441,13 +1452,13 @@ html, body {
 .metric-quad-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 2px;
 }
 
 .metric-icon-disc {
-  width: 38px;
-  height: 38px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: rgba(4, 106, 56, 0.1);
   color: var(--accent-green);
@@ -1463,7 +1474,7 @@ html, body {
 }
 
 .metric-quad-label {
-  font-size: 13px;
+  font-size: 11.5px;
   font-weight: 600;
   color: var(--text-muted);
 }
@@ -1472,11 +1483,11 @@ html, body {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .metric-quad-num {
-  font-size: 28px;
+  font-size: 21px;
   font-weight: 800;
   letter-spacing: -0.03em;
   color: var(--text-main);
@@ -1485,36 +1496,36 @@ html, body {
 }
 
 .metric-quad-num span {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-muted);
-  margin-left: 3px;
+  margin-left: 2px;
 }
 
 .metric-quad-trend {
   display: flex;
   align-items: center;
   gap: 3px;
-  font-size: 11.5px;
+  font-size: 10.5px;
   font-weight: 700;
   color: var(--accent-green);
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .metric-sparkline-svg {
-  width: 85px;
-  height: 32px;
+  width: 68px;
+  height: 22px;
   overflow: visible;
   flex-shrink: 0;
 }
 
 .metric-segmented-bar {
   width: 100%;
-  height: 8px;
+  height: 6px;
   border-radius: var(--radius-pill);
   background: rgba(4, 106, 56, 0.12);
   overflow: hidden;
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .metric-segmented-bar-fill {
@@ -1528,43 +1539,49 @@ html, body {
 .mid-control-grid {
   display: grid;
   grid-template-columns: 1.15fr 1.35fr 0.95fr;
-  gap: 16px;
+  gap: 10px;
   position: relative;
   z-index: 1;
+  flex: 1.15;
+  min-height: 0;
 }
 
 @media (max-width: 1100px) {
   .mid-control-grid {
     grid-template-columns: 1fr;
+    flex: none;
   }
 }
 
 .mockup-card {
   background: var(--card-bg);
   border-radius: var(--radius-card);
-  padding: 20px 22px;
+  padding: 10px 14px;
   border: 1px solid var(--card-border);
   box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   position: relative;
   overflow: hidden;
+  min-height: 0;
 }
 
 .mockup-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
 }
 
 .mockup-card-title {
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--text-main);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   letter-spacing: -0.01em;
 }
 
@@ -1573,14 +1590,15 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 6px 0;
+  gap: 10px;
+  padding: 0;
+  flex: 1;
 }
 
 .donut-gauge-wrapper {
   position: relative;
-  width: 130px;
-  height: 130px;
+  width: 82px;
+  height: 82px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1603,13 +1621,13 @@ html, body {
 }
 
 .donut-sprout-icon {
-  font-size: 20px;
+  font-size: 14px;
   line-height: 1;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .donut-pct-text {
-  font-size: 26px;
+  font-size: 18px;
   font-weight: 800;
   color: var(--text-main);
   letter-spacing: -0.03em;
@@ -1617,28 +1635,28 @@ html, body {
 }
 
 .donut-sub-text {
-  font-size: 10px;
+  font-size: 8.5px;
   font-weight: 600;
   color: var(--text-muted);
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .plant-health-checklist {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 5px;
   flex: 1;
 }
 
 .health-check-row {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  gap: 7px;
 }
 
 .check-circle-icon {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: rgba(4, 106, 56, 0.12);
   color: var(--accent-green);
@@ -1646,22 +1664,24 @@ html, body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 1px;
+  font-size: 9.5px;
+  font-weight: 700;
 }
 
 .check-label-col {
   display: flex;
   flex-direction: column;
+  line-height: 1.15;
 }
 
 .check-title {
-  font-size: 13px;
+  font-size: 11.5px;
   font-weight: 700;
   color: var(--text-main);
 }
 
 .check-status {
-  font-size: 11.5px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--accent-green);
 }
@@ -1670,9 +1690,9 @@ html, body {
   position: absolute;
   bottom: -6px;
   left: -6px;
-  width: 65px;
-  height: 65px;
-  opacity: 0.15;
+  width: 50px;
+  height: 50px;
+  opacity: 0.12;
   pointer-events: none;
 }
 
@@ -1680,18 +1700,19 @@ html, body {
 .sensor-trends-legend {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 12px;
-  font-size: 11.5px;
+  gap: 12px;
+  margin-bottom: 4px;
+  font-size: 10.5px;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .legend-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   display: inline-block;
-  margin-right: 5px;
+  margin-right: 4px;
 }
 
 .time-range-pills {
@@ -1699,8 +1720,8 @@ html, body {
   align-items: center;
   background: var(--subtle-input-bg);
   border-radius: var(--radius-pill);
-  padding: 3px;
-  gap: 3px;
+  padding: 2px;
+  gap: 2px;
   border: 1px solid var(--card-border);
 }
 
@@ -1708,8 +1729,8 @@ html, body {
   background: transparent;
   border: none;
   border-radius: var(--radius-pill);
-  padding: 3px 10px;
-  font-size: 11px;
+  padding: 2px 7px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
@@ -1727,22 +1748,22 @@ html, body {
   background: rgba(4, 106, 56, 0.08);
   border: 1px solid rgba(4, 106, 56, 0.15);
   border-radius: 6px;
-  padding: 16px;
+  padding: 8px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 6px;
 }
 
 .irrigation-pump-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .pump-droplet-badge {
-  width: 48px;
-  height: 48px;
+  width: 34px;
+  height: 34px;
   border-radius: 6px;
   background: var(--accent-green);
   color: #ffffff;
@@ -1750,7 +1771,7 @@ html, body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(4, 106, 56, 0.25);
+  box-shadow: 0 2px 8px rgba(4, 106, 56, 0.2);
 }
 
 .pump-droplet-badge.off {
@@ -1764,13 +1785,13 @@ html, body {
 }
 
 .pump-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-muted);
 }
 
 .pump-state-headline {
-  font-size: 22px;
+  font-size: 17px;
   font-weight: 800;
   color: var(--text-main);
   letter-spacing: -0.02em;
@@ -1778,30 +1799,30 @@ html, body {
 }
 
 .pump-reason-desc {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   color: var(--text-muted);
-  margin-top: 3px;
+  margin-top: 1px;
 }
 
 .irrigation-actions-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
 }
 
 .irrigation-action-btn {
   background: #ffffff;
   border: 1px solid var(--card-border);
   border-radius: var(--radius-pill);
-  padding: 8px 12px;
-  font-size: 12px;
+  padding: 6px 8px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-main);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(31, 59, 46, 0.05);
   transition: all 160ms ease;
@@ -1810,46 +1831,49 @@ html, body {
 .irrigation-action-btn:hover {
   background: var(--subtle-input-bg);
   border-color: var(--accent-green);
-  transform: translateY(-1px);
 }
 
 /* 3. BOTTOM ROW: 3 WIDGETS GRID (Water Reservoir, Species Presets, Recent Activity) */
 .bottom-widgets-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 10px;
   position: relative;
   z-index: 1;
+  flex: 1;
+  min-height: 0;
 }
 
 @media (max-width: 992px) {
   .bottom-widgets-grid {
     grid-template-columns: 1fr;
+    flex: none;
   }
 }
 
 .widget-content-layout {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-top: 6px;
+  gap: 12px;
+  margin-top: 2px;
+  flex: 1;
 }
 
 .tank-render-img {
-  width: 78px;
-  height: 94px;
+  width: 54px;
+  height: 64px;
   object-fit: contain;
   background: transparent;
-  filter: drop-shadow(0 4px 10px rgba(31, 59, 46, 0.12));
+  filter: drop-shadow(0 3px 6px rgba(31, 59, 46, 0.12));
   flex-shrink: 0;
 }
 
 .potted-plant-render-img {
-  width: 78px;
-  height: 94px;
+  width: 54px;
+  height: 64px;
   object-fit: contain;
   background: transparent;
-  filter: drop-shadow(0 4px 10px rgba(31, 59, 46, 0.12));
+  filter: drop-shadow(0 3px 6px rgba(31, 59, 46, 0.12));
   flex-shrink: 0;
 }
 
@@ -1860,20 +1884,20 @@ html, body {
 }
 
 .widget-headline-val {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 800;
   color: var(--text-main);
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1.05;
   font-feature-settings: 'tnum' 1;
 }
 
 .widget-sub-metric {
-  font-size: 11.5px;
+  font-size: 10.5px;
   font-weight: 500;
   color: var(--text-muted);
-  margin-top: 2px;
-  margin-bottom: 8px;
+  margin-top: 1px;
+  margin-bottom: 4px;
 }
 
 .widget-action-pill {
@@ -1881,18 +1905,17 @@ html, body {
   color: #ffffff;
   border: none;
   border-radius: var(--radius-pill);
-  padding: 6px 16px;
-  font-size: 11.5px;
+  padding: 4px 12px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   align-self: flex-start;
   transition: all 160ms ease;
-  box-shadow: 0 2px 6px rgba(31, 59, 46, 0.15);
+  box-shadow: 0 1px 4px rgba(31, 59, 46, 0.15);
 }
 
 .widget-action-pill:hover {
   background: var(--accent-green);
-  transform: translateY(-1px);
 }
 
 .widget-action-pill.outline {
@@ -1911,15 +1934,17 @@ html, body {
 .activity-feed-list {
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  margin-top: 4px;
+  gap: 5px;
+  margin-top: 2px;
+  flex: 1;
+  justify-content: center;
 }
 
 .activity-feed-item {
   display: flex;
   align-items: center;
-  gap: 9px;
-  font-size: 12px;
+  gap: 8px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-main);
 }

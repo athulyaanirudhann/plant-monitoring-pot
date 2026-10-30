@@ -35,7 +35,7 @@ export default function BotaniQDashboard({
   setIsWaterSavingsOpen
 }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative' }}>
+    <div className="dashboard-content-container">
       {/* 1. HERO GREETING BANNER WITH BOTANICAL MONSTERA FOLIAGE */}
       <div className="dashboard-header-hero">
         <div className="dashboard-hero-foliage" />
@@ -395,7 +395,7 @@ export default function BotaniQDashboard({
           </div>
 
           {/* SVG Multi-Line Spline Chart */}
-          <div style={{ flex: 1, minHeight: '130px', position: 'relative' }}>
+          <div style={{ flex: 1, minHeight: '80px', maxHeight: '110px', position: 'relative' }}>
             <svg viewBox="0 0 400 150" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
               {/* Y-Axis Grid Lines & Labels */}
               {[
