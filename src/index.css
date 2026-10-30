@@ -146,7 +146,7 @@
   transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
 }
 
-/* SOLID INVERTED BOTANICAL DOT CURSOR (Pine Green #1F3B2E / Inverts to Crisp White #FFFFFF) */
+/* SOLID INVERTED BOTANICAL DOT CURSOR (Pine Green #1F3B2E / Inverts to White) */
 .botaniq-custom-cursor {
   position: fixed;
   top: -8px;
@@ -154,12 +154,13 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: var(--sidebar-bg);
+  background-color: #E6D4DD;
+  mix-blend-mode: difference;
   pointer-events: none;
   z-index: 99999999;
   opacity: 0;
-  will-change: transform, background, box-shadow;
-  transition: opacity 160ms ease, box-shadow 120ms ease;
+  will-change: transform;
+  transition: opacity 160ms ease, width 140ms ease, height 140ms ease;
 }
 
 /* Hide native OS cursor so only the solid inverted dot is visible */
