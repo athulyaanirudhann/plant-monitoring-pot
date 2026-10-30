@@ -166,7 +166,7 @@ void loop() {
                 <button
                   onClick={() => onTriggerFault('SCENARIO_NORMAL')}
                   className="btn btn-outline btn-sm"
-                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#10b981' }}
+                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#046A38' }}
                 >
                   <span>🌿</span>
                   <span><strong>Normal:</strong> 65% soil, 27°C, 450 lux (Pump OFF)</span>
@@ -175,7 +175,7 @@ void loop() {
                 <button
                   onClick={() => onTriggerFault('SCENARIO_DRY')}
                   className="btn btn-outline btn-sm"
-                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#f59e0b' }}
+                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#d9531e' }}
                 >
                   <span>💧</span>
                   <span><strong>Dry:</strong> 31% soil, triggers pump ON</span>
@@ -184,7 +184,7 @@ void loop() {
                 <button
                   onClick={() => onTriggerFault('SCENARIO_CRITICAL')}
                   className="btn btn-outline btn-sm"
-                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#ef4444' }}
+                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#E34222' }}
                 >
                   <span>⚠️</span>
                   <span><strong>Critical:</strong> 18% soil, Critical Alert</span>
@@ -193,7 +193,7 @@ void loop() {
                 <button
                   onClick={() => onTriggerFault('SCENARIO_SENSOR_FAIL')}
                   className="btn btn-outline btn-sm"
-                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#dc2626' }}
+                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#E34222' }}
                 >
                   <span>🚫</span>
                   <span><strong>Failure:</strong> Soil --, Sensor Offline</span>
@@ -204,7 +204,7 @@ void loop() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
               {/* Trigger 1: Force Soil Dry */}
               <div style={{ padding: '12px', background: 'hsl(var(--muted) / 0.4)', border: '1px solid hsl(var(--border) / 0.6)', borderRadius: 'var(--radius)' }}>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: '#f59e0b', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: '#d9531e', marginBottom: '4px' }}>
                   Simulate Dry Soil
                 </div>
                 <p style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', marginBottom: '10px' }}>
@@ -222,7 +222,7 @@ void loop() {
 
               {/* Trigger 2: Refill / Drain Tank */}
               <div style={{ padding: '12px', background: 'hsl(var(--muted) / 0.4)', border: '1px solid hsl(var(--border) / 0.6)', borderRadius: 'var(--radius)' }}>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: '#06b6d4', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: '#046A38', marginBottom: '4px' }}>
                   Reservoir Tank Simulator
                 </div>
                 <p style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', marginBottom: '10px' }}>
@@ -232,7 +232,7 @@ void loop() {
                   <button
                     onClick={() => onSimulateTankChange(0)}
                     className="btn btn-outline btn-sm"
-                    style={{ flex: 1, color: '#ef4444' }}
+                    style={{ flex: 1, color: '#E34222' }}
                   >
                     Empty Tank
                   </button>
@@ -248,7 +248,7 @@ void loop() {
 
               {/* Trigger 3: Fault Out-of-Range */}
               <div style={{ padding: '12px', background: 'hsl(var(--muted) / 0.4)', border: '1px solid hsl(var(--border) / 0.6)', borderRadius: 'var(--radius)' }}>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: '#ef4444', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: '#E34222', marginBottom: '4px' }}>
                   Simulate Sensor Fault
                 </div>
                 <p style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', marginBottom: '10px' }}>
@@ -257,7 +257,7 @@ void loop() {
                 <button
                   onClick={() => onTriggerFault('SENSOR_DISCONNECTED')}
                   className="btn btn-outline btn-sm"
-                  style={{ width: '100%', color: '#ef4444' }}
+                  style={{ width: '100%', color: '#E34222' }}
                 >
                   <ShieldAlert size={13} />
                   Trigger Fault

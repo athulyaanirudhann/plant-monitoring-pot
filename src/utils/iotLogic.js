@@ -93,9 +93,9 @@ export function calculatePlantStatus(telemetry = {}, settings = {}, sensorHealth
     return {
       state: 'CRITICAL',
       label: 'CRITICAL',
-      color: '#ef4444',
-      bg: '#fee2e2',
-      border: '#fca5a5',
+      color: '#E34222',
+      bg: 'rgba(227, 66, 34, 0.12)',
+      border: 'rgba(227, 66, 34, 0.35)',
       badgeClass: 'badge-destructive',
       reason
     };
@@ -116,9 +116,9 @@ export function calculatePlantStatus(telemetry = {}, settings = {}, sensorHealth
     return {
       state: 'NEEDS ATTENTION',
       label: 'NEEDS ATTENTION',
-      color: '#f59e0b',
-      bg: '#fef3c7',
-      border: '#fcd34d',
+      color: '#d9531e',
+      bg: 'rgba(227, 66, 34, 0.08)',
+      border: 'rgba(227, 66, 34, 0.28)',
       badgeClass: 'badge-amber',
       reason
     };
@@ -128,9 +128,9 @@ export function calculatePlantStatus(telemetry = {}, settings = {}, sensorHealth
   return {
     state: 'HEALTHY',
     label: 'HEALTHY',
-    color: '#10b981',
-    bg: '#e4f7ee',
-    border: '#c7eed9',
+    color: '#046A38',
+    bg: 'rgba(4, 106, 56, 0.12)',
+    border: 'rgba(4, 106, 56, 0.3)',
     badgeClass: 'badge-emerald',
     reason: 'All monitored conditions are within species target ranges'
   };

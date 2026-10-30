@@ -1,70 +1,76 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-/* LIGHT THEME (Default) */
+/* LIGHT THEME (Default) - Approved Palette:
+   #046A38 EMERALD GREEN
+   #F9EBD7 WARM IVORY
+   #1F3B2E PINE GREEN
+   #E34222 VIBRANT RED
+   WHITE #FFFFFF
+*/
 :root, [data-theme='light'] {
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* HSL shadcn compatibility variables for components */
-  --background: 130 18% 94%;
-  --foreground: 154 33% 11%;
-  --card: 0 0% 100%;
-  --card-foreground: 154 33% 11%;
+  --background: 35 68% 91%; /* #F9EBD7 Warm Ivory */
+  --foreground: 152 31% 18%; /* #1F3B2E Pine Green */
+  --card: 0 0% 100%; /* #FFFFFF Crisp Pure White */
+  --card-foreground: 152 31% 18%; /* #1F3B2E Pine Green */
   --popover: 0 0% 100%;
-  --popover-foreground: 154 33% 11%;
-  --primary: 154 100% 38%;
+  --popover-foreground: 152 31% 18%;
+  --primary: 151 93% 22%; /* #046A38 Emerald Green */
   --primary-foreground: 0 0% 100%;
-  --secondary: 140 14% 92%;
-  --secondary-foreground: 154 33% 11%;
-  --muted: 140 14% 92%;
-  --muted-foreground: 154 11% 44%;
-  --accent: 140 14% 92%;
-  --accent-foreground: 154 33% 11%;
-  --destructive: 0 84% 60%;
+  --secondary: 35 45% 85%;
+  --secondary-foreground: 152 31% 18%;
+  --muted: 35 38% 86%;
+  --muted-foreground: 152 22% 38%;
+  --accent: 35 45% 87%;
+  --accent-foreground: 151 93% 22%;
+  --destructive: 10 78% 51%; /* #E34222 Vibrant Red */
   --destructive-foreground: 0 0% 100%;
-  --border: 135 15% 90%;
-  --input: 135 15% 90%;
-  --ring: 154 100% 38%;
+  --border: 152 20% 84%;
+  --input: 152 20% 86%;
+  --ring: 151 93% 22%;
   --radius: 16px;
 
-  /* Botanical Theme Colors */
-  --outer-bg: #6f7682; /* Neutral slate grey framing the dashboard window exactly like mockup */
-  --sidebar-bg: #0b3226; /* Deep forest emerald pine */
-  --sidebar-hover: #124334;
-  --sidebar-active: #134435;
-  --sidebar-text: #a8c2b7;
+  /* Botanical Impeccable Theme Tokens */
+  --outer-bg: #1F3B2E; /* Deep Pine Green */
+  --sidebar-bg: #1F3B2E; /* #1F3B2E Pine Green */
+  --sidebar-hover: #264a3a;
+  --sidebar-active: #046A38; /* #046A38 Emerald Green */
+  --sidebar-text: #c2d9ce;
   --sidebar-text-active: #ffffff;
   
-  --canvas-bg: #ffffff; /* Clean pure white canvas */
-  --card-bg: #ffffff;
-  --card-border: #e2ebe4;
-  --card-shadow: 0 4px 20px -2px rgba(11, 50, 38, 0.04);
+  --canvas-bg: #F9EBD7; /* #F9EBD7 Warm Ivory Canvas */
+  --card-bg: #ffffff; /* Crisp White */
+  --card-border: rgba(31, 59, 46, 0.12);
+  --card-shadow: 0 4px 20px -2px rgba(31, 59, 46, 0.06);
 
-  --text-main: #142820;
-  --text-muted: #647d72;
-  --text-light: #94a89f;
+  --text-main: #1F3B2E; /* Pine Green text for superior contrast and botanical cohesion */
+  --text-muted: #4a6c5d;
+  --text-light: #6c8d7e;
 
-  --accent-green: #00c06d;
-  --accent-green-subtle: #e3f8ee;
-  --accent-coral: #f87171;
-  --accent-cyan: #06b6d4;
-  --accent-amber: #f59e0b;
+  --accent-green: #046A38; /* #046A38 Emerald Green */
+  --accent-green-subtle: rgba(4, 106, 56, 0.12);
+  --accent-coral: #E34222; /* #E34222 Vibrant Red */
+  --accent-cyan: #1F3B2E;
+  --accent-amber: #d97706;
 
-  --gauge-track: #e2ebe4;
+  --gauge-track: rgba(31, 59, 46, 0.1);
 
-  --dark-pill-bg: #091a13;
+  --dark-pill-bg: #1F3B2E; /* #1F3B2E Pine Green */
   --dark-pill-text: #ffffff;
-  --white-pill-bg: #ffffff;
-  --white-pill-border: #e2ebe4;
-  --white-pill-text: #142820;
+  --white-pill-bg: #ffffff; /* White */
+  --white-pill-border: rgba(31, 59, 46, 0.14);
+  --white-pill-text: #1F3B2E;
 
-  --hero-bg: linear-gradient(135deg, #093b2a 0%, #0d543e 60%, #11684c 100%);
+  --hero-bg: linear-gradient(135deg, #1F3B2E 0%, #046A38 100%);
   --modal-bg: #ffffff;
-  --modal-border: #e2ebe4;
-  --modal-overlay: rgba(9, 26, 19, 0.65);
+  --modal-border: rgba(31, 59, 46, 0.14);
+  --modal-overlay: rgba(31, 59, 46, 0.72);
 
-  --subtle-input-bg: #f8faf8;
-  --table-hover: #f4f8f5;
+  --subtle-input-bg: rgba(249, 235, 215, 0.55);
+  --table-hover: rgba(249, 235, 215, 0.7);
 
   --radius-window: 28px;
   --radius-card: 18px;
@@ -73,64 +79,64 @@
 
 /* DARK THEME (Shiftable with theme toggle) */
 [data-theme='dark'] {
-  --background: 150 18% 6%;
-  --foreground: 145 15% 95%;
-  --card: 154 26% 9%;
-  --card-foreground: 145 15% 95%;
-  --popover: 154 26% 9%;
-  --popover-foreground: 145 15% 95%;
-  --primary: 160 84% 39%;
+  --background: 152 35% 10%;
+  --foreground: 35 60% 92%; /* #F9EBD7 Warm Ivory in dark mode */
+  --card: 152 31% 18%; /* #1F3B2E Pine Green */
+  --card-foreground: 35 60% 92%;
+  --popover: 152 31% 18%;
+  --popover-foreground: 35 60% 92%;
+  --primary: 151 93% 32%; /* #046A38 Emerald Green */
   --primary-foreground: 0 0% 100%;
-  --secondary: 154 22% 14%;
-  --secondary-foreground: 145 15% 95%;
-  --muted: 154 22% 14%;
-  --muted-foreground: 150 11% 59%;
-  --accent: 154 22% 14%;
-  --accent-foreground: 145 15% 95%;
-  --destructive: 0 72% 51%;
+  --secondary: 152 28% 14%;
+  --secondary-foreground: 35 60% 92%;
+  --muted: 152 28% 14%;
+  --muted-foreground: 35 25% 70%;
+  --accent: 152 28% 14%;
+  --accent-foreground: 35 60% 92%;
+  --destructive: 10 78% 51%; /* #E34222 Vibrant Red */
   --destructive-foreground: 0 0% 100%;
-  --border: 154 29% 14%;
-  --input: 154 29% 14%;
-  --ring: 160 84% 39%;
+  --border: 152 20% 24%;
+  --input: 152 20% 24%;
+  --ring: 151 93% 32%;
   --radius: 16px;
 
-  --outer-bg: #070c09;
-  --sidebar-bg: #061912;
-  --sidebar-hover: #0c2b20;
-  --sidebar-active: #133f30;
-  --sidebar-text: #8ea89d;
+  --outer-bg: #0d1a14;
+  --sidebar-bg: #12241c;
+  --sidebar-hover: #193126;
+  --sidebar-active: #046A38;
+  --sidebar-text: #c2d9ce;
   --sidebar-text-active: #ffffff;
   
-  --canvas-bg: #0b1410;
-  --card-bg: #111e18;
-  --card-border: #1a2f26;
-  --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+  --canvas-bg: #162c22;
+  --card-bg: #1F3B2E; /* #1F3B2E Pine Green */
+  --card-border: rgba(249, 235, 215, 0.12);
+  --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
 
-  --text-main: #f0f5f2;
-  --text-muted: #8ba397;
-  --text-light: #5f756b;
+  --text-main: #F9EBD7; /* Warm Ivory text on dark background */
+  --text-muted: #cfc2af;
+  --text-light: #9f9483;
 
-  --accent-green: #10b981;
-  --accent-green-subtle: rgba(16, 185, 129, 0.15);
-  --accent-coral: #f87171;
-  --accent-cyan: #06b6d4;
+  --accent-green: #078c4b;
+  --accent-green-subtle: rgba(4, 106, 56, 0.25);
+  --accent-coral: #E34222;
+  --accent-cyan: #F9EBD7;
   --accent-amber: #f59e0b;
 
-  --gauge-track: #172e25;
+  --gauge-track: rgba(249, 235, 215, 0.1);
 
-  --dark-pill-bg: #060e0a;
+  --dark-pill-bg: #12241c;
   --dark-pill-text: #ffffff;
-  --white-pill-bg: #111e18;
-  --white-pill-border: #1a2f26;
-  --white-pill-text: #f0f5f2;
+  --white-pill-bg: #264738;
+  --white-pill-border: rgba(249, 235, 215, 0.15);
+  --white-pill-text: #F9EBD7;
 
-  --hero-bg: linear-gradient(135deg, #062217 0%, #0b3627 60%, #0f4532 100%);
-  --modal-bg: #111e18;
-  --modal-border: #1a2f26;
+  --hero-bg: linear-gradient(135deg, #12241c 0%, #1F3B2E 50%, #046A38 100%);
+  --modal-bg: #1F3B2E;
+  --modal-border: rgba(249, 235, 215, 0.15);
   --modal-overlay: rgba(0, 0, 0, 0.85);
 
-  --subtle-input-bg: #162620;
-  --table-hover: #16261f;
+  --subtle-input-bg: #1a3529;
+  --table-hover: #264738;
 }
 
 *, *::before, *::after {
@@ -140,27 +146,27 @@
   transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
 }
 
-/* CUSTOM DARK GREEN DOT CURSOR ("Small but not too small", matching dark forest green #083827) */
+/* CUSTOM BOTANICAL DOT CURSOR (#046A38 EMERALD GREEN, #1F3B2E PINE GREEN, #F9EBD7 WARM IVORY) */
 html, body, *, *::before, *::after {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='6.5' fill='%23083827' fill-opacity='0.22'/%3E%3Ccircle cx='9' cy='9' r='4' fill='%23083827' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E") 9 9, auto;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='6.5' fill='%23046A38' fill-opacity='0.24'/%3E%3Ccircle cx='9' cy='9' r='4' fill='%231F3B2E' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E") 9 9, auto;
 }
 
-/* Interactive elements: expanded dark green dot with tactile halo on hover */
+/* Interactive elements: expanded emerald dot with warm ivory tactile stroke */
 button, a, input, select, textarea, [role="button"],
 .btn, .btn-black-pill, .btn-white-pill, .theme-toggle-pill,
 .sidebar-nav-item, .sidebar-theme-switch, .switch-container,
 .species-row, .nav-tab-btn, .range-slider, [tabindex="0"] {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='%23083827' fill-opacity='0.28'/%3E%3Ccircle cx='12' cy='12' r='4.8' fill='%23062c1e' stroke='%23ffffff' stroke-width='1.4'/%3E%3C/svg%3E") 12 12, pointer !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='%23046A38' fill-opacity='0.28'/%3E%3Ccircle cx='12' cy='12' r='4.8' fill='%23046A38' stroke='%23F9EBD7' stroke-width='1.4'/%3E%3C/svg%3E") 12 12, pointer !important;
 }
 
-/* Active pressed state: slightly compact dot for click feedback */
+/* Active pressed state: slightly compact pine green dot for click feedback */
 button:active, a:active, [role="button"]:active, .switch-container:active {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3.2' fill='%23041f15' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E") 8 8, pointer !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3.2' fill='%231F3B2E' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E") 8 8, pointer !important;
 }
 
-/* Dark Theme Variant of the Dark Green Dot Cursor */
+/* Dark Theme Variant of the Botanical Dot Cursor */
 [data-theme='dark'], [data-theme='dark'] * {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='6.5' fill='%23064e3b' fill-opacity='0.35'/%3E%3Ccircle cx='9' cy='9' r='4' fill='%23064e3b' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E") 9 9, auto;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='6.5' fill='%23046A38' fill-opacity='0.35'/%3E%3Ccircle cx='9' cy='9' r='4' fill='%23046A38' stroke='%23F9EBD7' stroke-width='1.2'/%3E%3C/svg%3E") 9 9, auto;
 }
 
 [data-theme='dark'] button, 
@@ -179,11 +185,16 @@ button:active, a:active, [role="button"]:active, .switch-container:active {
 [data-theme='dark'] .species-row, 
 [data-theme='dark'] .nav-tab-btn, 
 [data-theme='dark'] .range-slider {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='%23064e3b' fill-opacity='0.35'/%3E%3Ccircle cx='12' cy='12' r='4.8' fill='%23064e3b' stroke='%23ffffff' stroke-width='1.4'/%3E%3C/svg%3E") 12 12, pointer !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='%23046A38' fill-opacity='0.35'/%3E%3Ccircle cx='12' cy='12' r='4.8' fill='%23046A38' stroke='%23F9EBD7' stroke-width='1.4'/%3E%3C/svg%3E") 12 12, pointer !important;
 }
 
 [data-theme='dark'] button:active, [data-theme='dark'] a:active {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3.2' fill='%23043828' stroke='%23ffffff' stroke-width='1.2'/%3E%3C/svg%3E") 8 8, pointer !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3.2' fill='%231F3B2E' stroke='%23F9EBD7' stroke-width='1.2'/%3E%3C/svg%3E") 8 8, pointer !important;
+}
+
+::selection {
+  background-color: #046A38;
+  color: #ffffff;
 }
 
 html, body {
@@ -388,7 +399,7 @@ html, body {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #00c06d;
+  border: 2px solid #046A38;
 }
 
 .sidebar-avatar-fallback {
@@ -396,8 +407,8 @@ html, body {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #14533d;
-  border: 2px solid #00c06d;
+  background: #1F3B2E;
+  border: 2px solid #046A38;
   color: #ffffff;
   font-weight: 700;
   font-size: 13px;
@@ -412,7 +423,7 @@ html, body {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #00c06d;
+  background-color: #046A38;
   border: 2px solid var(--sidebar-bg);
 }
 
@@ -487,11 +498,11 @@ html, body {
 }
 
 .mfg-dot.dot-orange {
-  background-color: #f97316;
+  background-color: #E34222;
 }
 
 .mfg-dot.dot-grey {
-  background-color: #94a3b8;
+  background-color: #6c8d7e;
 }
 
 .mfg-val {
@@ -786,7 +797,7 @@ html, body {
   min-width: 52px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
-  border: 3px solid #f97316;
+  border: 3px solid #046A38;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -980,19 +991,19 @@ html, body {
   font-size: 12.5px;
 }
 .alert-strip.warning {
-  background-color: rgba(245, 158, 11, 0.1);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  color: #d97706;
+  background-color: rgba(227, 66, 34, 0.08);
+  border: 1px solid rgba(227, 66, 34, 0.28);
+  color: #d9531e;
 }
 .alert-strip.critical {
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #ef4444;
+  background-color: rgba(227, 66, 34, 0.12);
+  border: 1px solid rgba(227, 66, 34, 0.35);
+  color: #E34222;
 }
 .alert-strip.info {
-  background-color: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #10b981;
+  background-color: rgba(4, 106, 56, 0.12);
+  border: 1px solid rgba(4, 106, 56, 0.3);
+  color: #046A38;
 }
 
 /* Range Sliders */
@@ -1179,7 +1190,7 @@ html, body {
 .badge-emerald {
   background-color: var(--accent-green-subtle);
   color: var(--accent-green);
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(4, 106, 56, 0.28);
 }
 
 .badge-outline {
@@ -1189,9 +1200,15 @@ html, body {
 }
 
 .badge-destructive {
-  background-color: rgba(239, 68, 68, 0.12);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  background-color: rgba(227, 66, 34, 0.12);
+  color: #E34222;
+  border: 1px solid rgba(227, 66, 34, 0.32);
+}
+
+.badge-amber {
+  background-color: rgba(227, 66, 34, 0.08);
+  color: #d9531e;
+  border: 1px solid rgba(227, 66, 34, 0.25);
 }
 
 .pulse-dot {

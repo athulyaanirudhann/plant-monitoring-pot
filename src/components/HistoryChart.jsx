@@ -15,7 +15,7 @@ export default function HistoryChart({
     moisture: {
       label: 'Soil Moisture',
       unit: '%',
-      color: '#10b981',
+      color: '#046A38',
       gradientId: 'moistureGrad',
       minVal: 0,
       maxVal: 100
@@ -23,7 +23,7 @@ export default function HistoryChart({
     temperature: {
       label: 'Temperature',
       unit: '°C',
-      color: '#f97316',
+      color: '#E34222',
       gradientId: 'tempGrad',
       minVal: 15,
       maxVal: 35
@@ -31,7 +31,7 @@ export default function HistoryChart({
     humidity: {
       label: 'Humidity',
       unit: '% RH',
-      color: '#06b6d4',
+      color: '#1F3B2E',
       gradientId: 'humidityGrad',
       minVal: 20,
       maxVal: 90
@@ -39,7 +39,7 @@ export default function HistoryChart({
     light: {
       label: 'Light Level',
       unit: 'Lux',
-      color: '#eab308',
+      color: '#c27d1a',
       gradientId: 'lightGrad',
       minVal: 0,
       maxVal: 8000

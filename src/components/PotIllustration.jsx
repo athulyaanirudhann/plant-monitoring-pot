@@ -7,7 +7,7 @@ export default function PotIllustration({ moisture, isPumping, tankLevel, plantP
   const isHealthy = moisture >= 30 && moisture <= 65;
   const isSaturated = moisture > 65;
 
-  const leafColor = isDry ? '#84cc16' : isSaturated ? '#059669' : '#10b981';
+  const leafColor = isDry ? '#E34222' : isSaturated ? '#046A38' : '#046A38';
   const leafDroop = isDry ? 14 : 0; // slight drooping effect when dry
 
   return (
@@ -22,38 +22,38 @@ export default function PotIllustration({ moisture, isPumping, tankLevel, plantP
         </div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           {isPumping && (
-            <span className="badge badge-cyan" style={{ animation: 'pulse-glow 1s infinite' }}>
+            <span className="badge badge-emerald" style={{ animation: 'pulse-glow 1s infinite' }}>
               <Droplet size={12} />
               PUMP ACTIVE (Dispensing...)
             </span>
           )}
-          <span className={`badge ${isHealthy ? 'badge-emerald' : isDry ? 'badge-amber' : 'badge-cyan'}`}>
+          <span className={`badge ${isHealthy ? 'badge-emerald' : isDry ? 'badge-destructive' : 'badge-emerald'}`}>
             {isHealthy ? 'Optimal Moisture' : isDry ? 'Soil Dehydrated' : 'Saturated'}
           </span>
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0', background: 'radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 70%)' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0', background: 'radial-gradient(circle at 50% 50%, rgba(4, 106, 56, 0.08) 0%, transparent 70%)' }}>
         <svg
           viewBox="0 0 440 380"
           style={{ width: '100%', maxWidth: '420px', height: 'auto', display: 'block' }}
         >
           <defs>
             <linearGradient id="potGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#27272a" />
-              <stop offset="50%" stopColor="#3f3f46" />
-              <stop offset="100%" stopColor="#27272a" />
+              <stop offset="0%" stopColor="#1F3B2E" />
+              <stop offset="50%" stopColor="#2c5240" />
+              <stop offset="100%" stopColor="#1F3B2E" />
             </linearGradient>
 
             <linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#523924" />
-              <stop offset="60%" stopColor="#3a2514" />
-              <stop offset="100%" stopColor="#28180c" />
+              <stop offset="0%" stopColor="#4a3b2c" />
+              <stop offset="60%" stopColor="#35281e" />
+              <stop offset="100%" stopColor="#231a13" />
             </linearGradient>
 
             <linearGradient id="waterTankGrad" x1="0%" y1="100%" x2="0%" y2="0%">
-              <stop offset="0%" stopColor="#0284c7" />
-              <stop offset="100%" stopColor="#38bdf8" />
+              <stop offset="0%" stopColor="#046A38" />
+              <stop offset="100%" stopColor="#0ba35b" />
             </linearGradient>
 
             <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
@@ -65,47 +65,47 @@ export default function PotIllustration({ moisture, isPumping, tankLevel, plantP
           {/* Plant Foliage (Stem and Leaves) */}
           <g transform={`translate(0, ${leafDroop})`} style={{ transition: 'transform 800ms ease' }}>
             {/* Central Stems */}
-            <path d="M 220 200 Q 215 140 220 80" stroke="#047857" strokeWidth="6" strokeLinecap="round" fill="none" />
-            <path d="M 218 160 Q 180 120 140 100" stroke="#047857" strokeWidth="4.5" strokeLinecap="round" fill="none" />
-            <path d="M 220 150 Q 260 110 300 90" stroke="#047857" strokeWidth="4.5" strokeLinecap="round" fill="none" />
-            <path d="M 218 120 Q 170 70 120 50" stroke="#047857" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-            <path d="M 220 110 Q 270 60 320 40" stroke="#047857" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+            <path d="M 220 200 Q 215 140 220 80" stroke="#1F3B2E" strokeWidth="6" strokeLinecap="round" fill="none" />
+            <path d="M 218 160 Q 180 120 140 100" stroke="#1F3B2E" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+            <path d="M 220 150 Q 260 110 300 90" stroke="#1F3B2E" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+            <path d="M 218 120 Q 170 70 120 50" stroke="#1F3B2E" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+            <path d="M 220 110 Q 270 60 320 40" stroke="#1F3B2E" strokeWidth="3.5" strokeLinecap="round" fill="none" />
 
             {/* Lush Leaves */}
             {/* Top Central Leaf */}
             <path
               d="M 220 80 Q 200 40 220 15 Q 240 40 220 80 Z"
               fill={leafColor}
-              stroke="#065f46"
+              stroke="#1F3B2E"
               strokeWidth="2"
             />
             {/* Left Big Leaf */}
             <path
               d="M 140 100 Q 90 70 80 110 Q 120 140 140 100 Z"
               fill={leafColor}
-              stroke="#065f46"
+              stroke="#1F3B2E"
               strokeWidth="2"
             />
             {/* Right Big Leaf */}
             <path
               d="M 300 90 Q 350 60 360 100 Q 320 130 300 90 Z"
               fill={leafColor}
-              stroke="#065f46"
+              stroke="#1F3B2E"
               strokeWidth="2"
             />
             {/* Left Upper Leaf */}
             <path
               d="M 120 50 Q 70 20 80 60 Q 110 75 120 50 Z"
               fill={leafColor}
-              stroke="#065f46"
-              strokeWidth="1.8"
+              stroke="#1F3B2E"
+              strokeWidth="2"
             />
             {/* Right Upper Leaf */}
             <path
               d="M 320 40 Q 370 10 360 50 Q 330 65 320 40 Z"
               fill={leafColor}
-              stroke="#065f46"
-              strokeWidth="1.8"
+              stroke="#1F3B2E"
+              strokeWidth="2"
             />
           </g>
 

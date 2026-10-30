@@ -40,7 +40,7 @@ export default function MetricCards({
       <div className="shadcn-stat-card">
         <div className="shadcn-stat-top">
           <span className="shadcn-stat-title">
-            <Droplets size={15} color="#10b981" />
+            <Droplets size={15} color="#046A38" />
             Soil Moisture
           </span>
           <span className={`badge ${moistureBadge.variant}`}>
@@ -57,7 +57,7 @@ export default function MetricCards({
               className="meter-fill"
               style={{
                 width: `${Math.min(100, Math.max(0, moisture))}%`,
-                backgroundColor: moisture < thresholdLow ? '#f59e0b' : '#10b981'
+                backgroundColor: moisture < thresholdLow ? '#E34222' : '#046A38'
               }}
             />
           </div>
@@ -73,7 +73,7 @@ export default function MetricCards({
       <div className="shadcn-stat-card">
         <div className="shadcn-stat-top">
           <span className="shadcn-stat-title">
-            <Thermometer size={15} color="#f97316" />
+            <Thermometer size={15} color="#E34222" />
             Ambient Temperature
           </span>
           <button
@@ -95,7 +95,7 @@ export default function MetricCards({
               className="meter-fill"
               style={{
                 width: `${Math.min(100, Math.max(0, (temperature / 40) * 100))}%`,
-                backgroundColor: '#f97316'
+                backgroundColor: '#E34222'
               }}
             />
           </div>
@@ -111,7 +111,7 @@ export default function MetricCards({
       <div className="shadcn-stat-card">
         <div className="shadcn-stat-top">
           <span className="shadcn-stat-title">
-            <Wind size={15} color="#06b6d4" />
+            <Wind size={15} color="#1F3B2E" />
             Relative Humidity
           </span>
           <span className="badge badge-outline tnum" style={{ fontSize: '10.5px' }}>
@@ -128,7 +128,7 @@ export default function MetricCards({
               className="meter-fill"
               style={{
                 width: `${Math.min(100, Math.max(0, humidity))}%`,
-                backgroundColor: '#06b6d4'
+                backgroundColor: '#1F3B2E'
               }}
             />
           </div>
@@ -207,7 +207,7 @@ export default function MetricCards({
               className="meter-fill"
               style={{
                 width: `${Math.min(100, Math.max(0, tankLevelPercent))}%`,
-                backgroundColor: isTankEmpty ? '#ef4444' : isTankLow ? '#f59e0b' : '#0284c7'
+                backgroundColor: isTankEmpty ? '#E34222' : isTankLow ? '#d9531e' : '#046A38'
               }}
             />
           </div>
@@ -215,7 +215,7 @@ export default function MetricCards({
 
         <div className="shadcn-stat-footer">
           <span>Dry-Run Cutoff</span>
-          <span style={{ color: isTankEmpty ? '#ef4444' : '#10b981', fontWeight: 500 }}>
+          <span style={{ color: isTankEmpty ? '#E34222' : '#046A38', fontWeight: 500 }}>
             {isTankEmpty ? 'PUMP LOCKED' : 'PROTECTED'}
           </span>
         </div>
