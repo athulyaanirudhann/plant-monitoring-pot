@@ -3,10 +3,16 @@ import { PLANT_PRESETS } from './plantPresets';
 export function generateHistoryData(rangeHours = 24, currentMoisture = 44) {
   const points = [];
   const now = Date.now();
-  const numSteps = rangeHours === 1 ? 30 : rangeHours === 24 ? 48 : 56;
+  let numSteps = 48;
+  if (rangeHours <= 1) numSteps = 30;
+  else if (rangeHours <= 6) numSteps = 36;
+  else if (rangeHours <= 24) numSteps = 48;
+  else if (rangeHours <= 168) numSteps = 56;
+  else numSteps = 60;
+
   const stepMs = (rangeHours * 3600 * 1000) / numSteps;
 
-  let simulatedMoisture = currentMoisture - 18; // start lower in past
+  let simulatedMoisture = currentMoisture - (rangeHours > 24 ? 12 : 6);
   let pumpTriggeredRecently = false;
 
   for (let i = 0; i <= numSteps; i++) {
@@ -31,10 +37,10 @@ export function generateHistoryData(rangeHours = 24, currentMoisture = 44) {
 
     // Moisture decay with occasional pump jumps
     if (simulatedMoisture <= 31 && !pumpTriggeredRecently) {
-      simulatedMoisture += 26; // irrigation actuation
+      simulatedMoisture += 24; // irrigation actuation
       pumpTriggeredRecently = true;
     } else {
-      simulatedMoisture = Math.max(22, simulatedMoisture - (0.4 + (light > 1000 ? 0.3 : 0.1)));
+      simulatedMoisture = Math.max(22, simulatedMoisture - (0.35 + (light > 1000 ? 0.25 : 0.08)));
       pumpTriggeredRecently = false;
     }
 

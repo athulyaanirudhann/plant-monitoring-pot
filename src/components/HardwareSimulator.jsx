@@ -155,12 +155,50 @@ void loop() {
         {activeTab === 'controls' && (
           <div>
             <div style={{ padding: '12px', background: 'hsl(var(--muted) / 0.4)', borderRadius: 'var(--radius)', border: '1px solid hsl(var(--border) / 0.6)', marginBottom: '16px' }}>
-              <span style={{ fontSize: '12px', fontWeight: 600, color: 'hsl(var(--foreground))' }}>
-                Demonstration Control Panel:
+              <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'hsl(var(--foreground))' }}>
+                Quick Test Scenarios (IoT Specification Test Suite):
               </span>
-              <p style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', marginTop: '2px' }}>
-                Simulate soil drying and actuator faults on demand for reviews and presentations.
+              <p style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', marginTop: '2px', marginBottom: '10px' }}>
+                Verify UI state changes instantly across nominal, drought, critical, and sensor failure modes.
               </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+                <button
+                  onClick={() => onTriggerFault('SCENARIO_NORMAL')}
+                  className="btn btn-outline btn-sm"
+                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#10b981' }}
+                >
+                  <span>🌿</span>
+                  <span><strong>Normal:</strong> 65% soil, 27°C, 450 lux (Pump OFF)</span>
+                </button>
+
+                <button
+                  onClick={() => onTriggerFault('SCENARIO_DRY')}
+                  className="btn btn-outline btn-sm"
+                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#f59e0b' }}
+                >
+                  <span>💧</span>
+                  <span><strong>Dry:</strong> 31% soil, triggers pump ON</span>
+                </button>
+
+                <button
+                  onClick={() => onTriggerFault('SCENARIO_CRITICAL')}
+                  className="btn btn-outline btn-sm"
+                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#ef4444' }}
+                >
+                  <span>⚠️</span>
+                  <span><strong>Critical:</strong> 18% soil, Critical Alert</span>
+                </button>
+
+                <button
+                  onClick={() => onTriggerFault('SCENARIO_SENSOR_FAIL')}
+                  className="btn btn-outline btn-sm"
+                  style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#dc2626' }}
+                >
+                  <span>🚫</span>
+                  <span><strong>Failure:</strong> Soil --, Sensor Offline</span>
+                </button>
+              </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>

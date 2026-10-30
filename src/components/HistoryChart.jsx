@@ -141,16 +141,23 @@ export default function HistoryChart({
             ))}
           </div>
 
-          {/* Time Range Selector */}
+          {/* Time Range Selector: 1h, Today, 24h, 7d, 30d */}
           <div className="nav-tabs" style={{ height: '32px' }}>
-            {['1h', '24h', '7d'].map((r) => (
+            {[
+              { id: '1h', label: '1H' },
+              { id: 'today', label: 'Today' },
+              { id: '24h', label: '24H' },
+              { id: '7d', label: '7D' },
+              { id: '30d', label: '30D' }
+            ].map(({ id, label }) => (
               <button
-                key={r}
-                onClick={() => onChangeTimeRange(r)}
-                className={`nav-tab-btn ${timeRange === r ? 'active' : ''}`}
+                key={id}
+                onClick={() => onChangeTimeRange(id)}
+                className={`nav-tab-btn ${timeRange === id ? 'active' : ''}`}
                 style={{ fontSize: '11px', padding: '3px 8px' }}
+                title={`Show trends for ${label}`}
               >
-                {r.toUpperCase()}
+                {label}
               </button>
             ))}
           </div>

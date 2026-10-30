@@ -18,6 +18,19 @@ import HardwareSimulator from './components/HardwareSimulator';
 import AlertsCenter from './components/AlertsCenter';
 import HardwareCenter from './components/HardwareCenter';
 import confetti from 'canvas-confetti';
+import {
+  getMoistureStatus,
+  getTemperatureStatus,
+  getHumidityStatus,
+  getLightStatus,
+  calculatePlantStatus,
+  formatTimeAgo,
+  isDataStale,
+  formatSensorReading,
+  getIrrigationStateReason,
+  calculateWaterMetrics
+} from './utils/iotLogic';
+import { telemetryService } from './services/telemetryService';
 
 import {
   LayoutDashboard,
@@ -39,7 +52,10 @@ import {
   Send,
   Zap,
   Download,
-  Box
+  Box,
+  Wifi,
+  Square,
+  Play
 } from 'lucide-react';
 
 export default function App() {
@@ -106,8 +122,51 @@ export default function App() {
     }, 2500);
   };
 
+  // Sensor Health state (Section 5)
+  const [sensorHealth, setSensorHealth] = useState({
+    soilMoisture: 'online', // 'online' | 'offline' | 'error'
+    dht22: 'online',
+    lightSensor: 'online',
+    esp32: 'online'
+  });
+
+  // Current Actuator / Pump Tracking (Section 8)
+  const [lastTriggerType, setLastTriggerType] = useState('Autonomous');
+  const [lastTriggerReason, setLastTriggerReason] = useState('Soil moisture within target range');
+  const [pumpStartTime, setPumpStartTime] = useState(null);
+  const pumpTimerRef = React.useRef(null);
+
+  // 1-second clock for real-time freshness ("Updated 4s ago")
+  const [nowTs, setNowTs] = useState(Date.now());
   useEffect(() => {
-    const hours = timeRange === '1h' ? 1 : timeRange === '24h' ? 24 : 168;
+    const clock = setInterval(() => setNowTs(Date.now()), 1000);
+    return () => clearInterval(clock);
+  }, []);
+
+  const dataAgeSec = Math.max(0, Math.floor((nowTs - (activePot.telemetry.lastUpdated || nowTs)) / 1000));
+  const isStale = dataAgeSec > 30 || sensorHealth.esp32 === 'offline';
+
+  // Dynamic Overall Plant Condition (Section 3)
+  const plantStatus = calculatePlantStatus(activePot.telemetry, activePot.settings, sensorHealth);
+
+  // Status badges for each metric (Section 2)
+  const moistureStatus = getMoistureStatus(activePot.telemetry.moisture, activePot.settings.thresholdLow, activePot.settings.thresholdHigh);
+  const tempStatus = getTemperatureStatus(activePot.telemetry.temperature, activePot.settings.tempMin || 18, activePot.settings.tempMax || 29);
+  const humidityStatus = getHumidityStatus(activePot.telemetry.humidity, activePot.settings.humidityMin || 40, activePot.settings.humidityMax || 70);
+  const lightStatus = getLightStatus(activePot.telemetry.light, activePot.settings.lightMin || 800, activePot.settings.lightMax || 4000);
+
+  // Water usage calculations (Section 16 & 17)
+  const waterMetrics = calculateWaterMetrics(actuationLogs.filter((l) => l.potId === activePotId));
+
+  useEffect(() => {
+    const hoursMap = {
+      '1h': 1,
+      'today': 6,
+      '24h': 24,
+      '7d': 168,
+      '30d': 720
+    };
+    const hours = hoursMap[timeRange] || 24;
     setHistoryData(generateHistoryData(hours, activePot.telemetry.moisture));
   }, [activePotId, timeRange]);
 
@@ -117,6 +176,22 @@ export default function App() {
       setPots((prevPots) =>
         prevPots.map((p) => {
           if (p.id !== activePotId) return p;
+
+          // If soil sensor is offline, skip moisture decay simulation
+          if (sensorHealth.soilMoisture !== 'online') {
+            return {
+              ...p,
+              device: {
+                ...p.device,
+                uptimeSeconds: p.device.uptimeSeconds + 3,
+                lastHeartbeat: Date.now()
+              },
+              telemetry: {
+                ...p.telemetry,
+                lastUpdated: Date.now()
+              }
+            };
+          }
 
           const moistureDecay = isPumping ? 0 : 0.05;
           const newMoisture = Math.max(12, Math.min(95, p.telemetry.moisture - moistureDecay));
@@ -134,7 +209,7 @@ export default function App() {
             !isPumping &&
             p.telemetry.tankLevelPercent > 5
           ) {
-            triggerWatering(p.settings.burstDurationSec, 'Autonomous', `Soil moisture dropped to ${newMoisture.toFixed(1)}% (Below set point ${p.settings.thresholdLow}%)`);
+            triggerWatering(p.settings.burstDurationSec, 'Autonomous', `Soil moisture dropped to ${newMoisture.toFixed(1)}% (Below threshold ${p.settings.thresholdLow}%)`);
           }
 
           return {
@@ -158,24 +233,46 @@ export default function App() {
     }, 3000);
 
     return () => clearInterval(timer);
-  }, [activePotId, isPumping]);
+  }, [activePotId, isPumping, sensorHealth.soilMoisture]);
 
-  // Core Watering Actuation Routine
+  // Core Watering Actuation Routine with Safeguards (Sections 8, 12, 19)
   const triggerWatering = (durationSec = 6, triggerType = 'Manual', triggerReason = 'Manual user pulse test') => {
     if (isPumping) return;
 
     if (activePot.telemetry.tankLevelPercent <= 5) {
-      addToast('Cannot water: Water reservoir tank is empty! Dry-run protection active.', 'critical');
+      addToast('Dry-Run Safety Lockout: Reservoir empty! Pump actuation blocked.', 'critical');
       return;
     }
 
+    if (sensorHealth.soilMoisture !== 'online' && triggerType === 'Manual') {
+      addToast('Notice: Soil moisture sensor is offline. Manual pulse executing under override.', 'warning');
+    }
+
     setIsPumping(true);
+    setLastTriggerType(triggerType);
+    setLastTriggerReason(triggerReason);
+    setPumpStartTime(Date.now());
+
+    // Record "Irrigation Started" notification
+    setAlerts((prev) => [
+      {
+        id: 'alt-' + Date.now(),
+        potId: activePotId,
+        type: 'info',
+        title: triggerType === 'Autonomous' ? 'Automatic Irrigation Started' : 'Manual Irrigation Started',
+        message: `💧 Sub-surface pump activated. Reason: ${triggerReason}`,
+        timestamp: 'Just now',
+        acknowledged: false
+      },
+      ...prev
+    ]);
+
     addToast(`Sub-surface pump active: dispensing ${durationSec}s root hydration...`, 'info');
 
-    const moistureBefore = activePot.telemetry.moisture;
+    const moistureBefore = activePot.telemetry.moisture || 30.0;
     const deliveredMl = Math.round(durationSec * 5.5);
 
-    setTimeout(() => {
+    pumpTimerRef.current = setTimeout(() => {
       const moistureGain = Number((durationSec * 3.2).toFixed(1));
       const moistureAfter = Number(Math.min(92, moistureBefore + moistureGain).toFixed(1));
 
@@ -213,7 +310,22 @@ export default function App() {
 
       setActuationLogs((prev) => [newLog, ...prev]);
       setIsPumping(false);
+      setLastTriggerReason(`Target moisture reached (${moistureAfter}%)`);
       addToast(`Watering completed: Soil moisture restored to ${moistureAfter}%.`, 'success');
+
+      // Record "Irrigation Completed" notification
+      setAlerts((prev) => [
+        {
+          id: 'alt-' + (Date.now() + 1),
+          potId: activePotId,
+          type: 'info',
+          title: 'Irrigation Completed Successfully',
+          message: `✓ Target moisture reached. Delivered ${deliveredMl} mL directly to root zone.`,
+          timestamp: 'Just now',
+          acknowledged: false
+        },
+        ...prev
+      ]);
 
       if (newTankPercent < 20) {
         setAlerts((prev) => [
@@ -230,6 +342,16 @@ export default function App() {
         ]);
       }
     }, durationSec * 1000);
+  };
+
+  const stopWatering = () => {
+    if (!isPumping) return;
+    if (pumpTimerRef.current) {
+      clearTimeout(pumpTimerRef.current);
+    }
+    setIsPumping(false);
+    setLastTriggerReason('Manual stop initiated by user');
+    addToast('Pump stopped: Irrigation stopped manually.', 'info');
   };
 
   const handleUpdateSettings = (newSettings) => {
@@ -494,7 +616,7 @@ export default function App() {
       <main className="main-canvas">
         {/* Header Bar */}
         <div className="canvas-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
             <h1 className="canvas-title">
               {activeNav === 'dashboard' && 'Dashboard'}
               {activeNav === 'analytics' && 'Telemetry Analytics'}
@@ -503,8 +625,57 @@ export default function App() {
               {activeNav === 'hardware' && 'ESP32 Hardware & IoT Architecture'}
               {activeNav === 'calibration' && 'Sensor Calibration Lab'}
             </h1>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: '#10b981', background: '#e4f7ee', padding: '3px 10px', borderRadius: '12px', border: '1px solid #c7eed9' }}>
+
+            {/* Plant Identification Badge */}
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#10b981', background: '#e4f7ee', padding: '4px 11px', borderRadius: '12px', border: '1px solid #c7eed9' }}>
               ● {activePot.name}
+            </span>
+
+            {/* Dynamic Overall Plant Status Badge (Section 3) */}
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                color: plantStatus.color,
+                background: plantStatus.bg,
+                padding: '4px 10px',
+                borderRadius: '12px',
+                border: `1px solid ${plantStatus.border}`,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                letterSpacing: '0.03em'
+              }}
+              title={plantStatus.reason}
+            >
+              ● {plantStatus.label}
+            </span>
+
+            {/* Real-Time Sensor Data Freshness (Section 15) */}
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 500,
+                color: isStale ? '#b45309' : 'var(--text-muted)',
+                background: isStale ? '#fef3c7' : 'var(--subtle-input-bg)',
+                padding: '3px 8px',
+                borderRadius: '8px',
+                border: '1px solid var(--card-border)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+              title={`Telemetry received from ${activePot.device.deviceId}`}
+            >
+              {isStale ? (
+                <>
+                  <span style={{ color: '#f59e0b', fontWeight: 700 }}>⚠ Data may be outdated</span> ({dataAgeSec}s ago)
+                </>
+              ) : (
+                <>
+                  <span style={{ color: '#10b981' }}>●</span> Last updated: {dataAgeSec === 0 ? 'just now' : `${dataAgeSec}s ago`}
+                </>
+              )}
             </span>
           </div>
 
@@ -562,86 +733,236 @@ export default function App() {
         {/* 1. VIEW: DASHBOARD */}
         {activeNav === 'dashboard' && (
           <>
-            {/* 3. TOP ROW: 3 STAT CARDS (Exact match to Air Pollution, Environmental Index, Clean Tech) */}
+            {/* 3. TOP ROW: 3 STAT CARDS (Section 2: Soil Moisture, Temperature, Illumination & Humidity) */}
             <div className="ref-top-metrics-grid">
-          {/* Card 1: Soil Moisture Level */}
-          <div className="ref-stat-card">
-            <div>
-              <div className="ref-stat-label">Soil Moisture Level</div>
-              <div className="ref-stat-value tnum">
-                {activePot.telemetry.moisture.toFixed(1)} <span style={{ fontSize: '16px', fontWeight: 500, color: '#647d72' }}>%</span>
+              {/* Card 1: Soil Moisture */}
+              <div className="ref-stat-card">
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <span className="ref-stat-label">Soil Moisture</span>
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        padding: '1px 7px',
+                        borderRadius: '6px',
+                        background: sensorHealth.soilMoisture !== 'online' ? '#fee2e2' : moistureStatus === 'Optimal' ? '#e4f7ee' : moistureStatus === 'Dry' ? '#fef3c7' : '#e0f2fe',
+                        color: sensorHealth.soilMoisture !== 'online' ? '#ef4444' : moistureStatus === 'Optimal' ? '#047857' : moistureStatus === 'Dry' ? '#b45309' : '#0284c7'
+                      }}
+                    >
+                      {sensorHealth.soilMoisture !== 'online' ? 'Offline' : moistureStatus}
+                    </span>
+                  </div>
+                  <div className="ref-stat-value tnum">
+                    {sensorHealth.soilMoisture === 'online' && activePot.telemetry.moisture !== null ? activePot.telemetry.moisture.toFixed(1) : '--'}
+                    <span style={{ fontSize: '16px', fontWeight: 500, color: '#647d72' }}> %</span>
+                  </div>
+                  <div className="ref-stat-sub">
+                    <span style={{ color: '#00c06d', fontWeight: 600 }}>Target: {activePot.settings.thresholdLow}%–{activePot.settings.thresholdHigh}%</span>
+                    <span>• Min: {activePot.settings.thresholdLow}%</span>
+                  </div>
+                </div>
+                {/* Green Mini Bar Sparkline */}
+                <div className="mini-bar-chart">
+                  {moistureBars.map((h, i) => (
+                    <div
+                      key={i}
+                      className="mini-bar"
+                      style={{
+                        height: `${h}px`,
+                        backgroundColor: i >= moistureBars.length - 2 ? '#00c06d' : '#86efac'
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="ref-stat-sub">
-                <span style={{ color: '#00c06d', fontWeight: 600 }}>↘ 2.3%</span> from last hour
-              </div>
-            </div>
-            {/* Green Mini Bar Sparkline */}
-            <div className="mini-bar-chart">
-              {moistureBars.map((h, i) => (
-                <div
-                  key={i}
-                  className="mini-bar"
-                  style={{
-                    height: `${h}px`,
-                    backgroundColor: i >= moistureBars.length - 2 ? '#00c06d' : '#86efac'
-                  }}
-                />
-              ))}
-            </div>
-          </div>
 
-          {/* Card 2: Environmental Quality / Temperature */}
-          <div className="ref-stat-card">
-            <div>
-              <div className="ref-stat-label">Ambient Temperature</div>
-              <div className="ref-stat-value tnum">
-                {activePot.telemetry.temperature.toFixed(1)} <span style={{ fontSize: '16px', fontWeight: 500, color: '#647d72' }}>°C</span>
+              {/* Card 2: Ambient Temperature */}
+              <div className="ref-stat-card">
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <span className="ref-stat-label">Ambient Temperature</span>
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        padding: '1px 7px',
+                        borderRadius: '6px',
+                        background: sensorHealth.dht22 !== 'online' ? '#fee2e2' : tempStatus === 'Normal' ? '#e4f7ee' : '#fef3c7',
+                        color: sensorHealth.dht22 !== 'online' ? '#ef4444' : tempStatus === 'Normal' ? '#047857' : '#b45309'
+                      }}
+                    >
+                      {sensorHealth.dht22 !== 'online' ? 'Offline' : tempStatus}
+                    </span>
+                  </div>
+                  <div className="ref-stat-value tnum">
+                    {sensorHealth.dht22 === 'online' && activePot.telemetry.temperature !== null ? activePot.telemetry.temperature.toFixed(1) : '--'}
+                    <span style={{ fontSize: '16px', fontWeight: 500, color: '#647d72' }}> °C</span>
+                  </div>
+                  <div className="ref-stat-sub">
+                    <span style={{ color: '#00c06d', fontWeight: 600 }}>Target: {activePot.settings.tempMin || 18}°C–{activePot.settings.tempMax || 29}°C</span>
+                    <span>• DHT22</span>
+                  </div>
+                </div>
+                {/* Coral/Orange Mini Bar Sparkline */}
+                <div className="mini-bar-chart">
+                  {tempBars.map((h, i) => (
+                    <div
+                      key={i}
+                      className="mini-bar"
+                      style={{
+                        height: `${h}px`,
+                        backgroundColor: i === tempBars.length - 1 ? '#f87171' : '#fca5a5'
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="ref-stat-sub">
-                <span style={{ color: '#f87171', fontWeight: 600 }}>↗ 1.4%</span> DHT22 calibrated
-              </div>
-            </div>
-            {/* Coral/Orange Mini Bar Sparkline */}
-            <div className="mini-bar-chart">
-              {tempBars.map((h, i) => (
-                <div
-                  key={i}
-                  className="mini-bar"
-                  style={{
-                    height: `${h}px`,
-                    backgroundColor: i === tempBars.length - 1 ? '#f87171' : '#fca5a5'
-                  }}
-                />
-              ))}
-            </div>
-          </div>
 
-          {/* Card 3: Light & Humidity Index */}
-          <div className="ref-stat-card">
-            <div>
-              <div className="ref-stat-label">Illumination & Humidity</div>
-              <div className="ref-stat-value tnum" style={{ fontSize: '24px' }}>
-                {activePot.telemetry.light.toLocaleString()} <span style={{ fontSize: '15px', fontWeight: 500, color: '#647d72' }}>Lux</span>
-              </div>
-              <div className="ref-stat-sub">
-                <span style={{ color: '#00c06d', fontWeight: 600 }}>VPD {activePot.telemetry.vpd} kPa</span> • Transpiration
+              {/* Card 3: Illumination & Relative Humidity */}
+              <div className="ref-stat-card">
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <span className="ref-stat-label">Light & Humidity</span>
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        padding: '1px 7px',
+                        borderRadius: '6px',
+                        background: sensorHealth.lightSensor !== 'online' ? '#fee2e2' : '#e4f7ee',
+                        color: sensorHealth.lightSensor !== 'online' ? '#ef4444' : '#047857'
+                      }}
+                    >
+                      {sensorHealth.lightSensor !== 'online' ? 'Offline' : lightStatus}
+                    </span>
+                  </div>
+                  <div className="ref-stat-value tnum" style={{ fontSize: '24px' }}>
+                    {sensorHealth.lightSensor === 'online' && activePot.telemetry.light !== null ? activePot.telemetry.light.toLocaleString() : '--'}
+                    <span style={{ fontSize: '15px', fontWeight: 500, color: '#647d72' }}> Lux</span>
+                  </div>
+                  <div className="ref-stat-sub">
+                    <span style={{ color: '#0284c7', fontWeight: 600 }}>
+                      Humidity: {sensorHealth.dht22 === 'online' ? `${activePot.telemetry.humidity.toFixed(1)}% (${humidityStatus})` : '--'}
+                    </span>
+                    <span>• VPD {sensorHealth.dht22 === 'online' ? activePot.telemetry.vpd : '--'} kPa</span>
+                  </div>
+                </div>
+                {/* Emerald Mini Bar Sparkline */}
+                <div className="mini-bar-chart">
+                  {lightBars.map((h, i) => (
+                    <div
+                      key={i}
+                      className="mini-bar"
+                      style={{
+                        height: `${h}px`,
+                        backgroundColor: i === lightBars.length - 1 ? '#00c06d' : '#86efac'
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-            {/* Emerald Mini Bar Sparkline */}
-            <div className="mini-bar-chart">
-              {lightBars.map((h, i) => (
-                <div
-                  key={i}
-                  className="mini-bar"
-                  style={{
-                    height: `${h}px`,
-                    backgroundColor: i === lightBars.length - 1 ? '#00c06d' : '#86efac'
-                  }}
-                />
-              ))}
+
+            {/* SENSOR HEALTH & HARDWARE STATUS STRIP (Section 5) */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '10px 18px',
+                background: 'var(--card-bg)',
+                borderRadius: '14px',
+                border: '1px solid var(--card-border)',
+                boxShadow: 'var(--card-shadow)',
+                flexWrap: 'wrap',
+                gap: '12px'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Cpu size={14} color="#00c06d" />
+                <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
+                  IOT SENSOR STATUS:
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                {/* Soil Sensor */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px' }}>
+                  <span
+                    style={{
+                      width: '7px',
+                      height: '7px',
+                      borderRadius: '50%',
+                      background: sensorHealth.soilMoisture === 'online' ? '#00c06d' : '#ef4444'
+                    }}
+                  />
+                  <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>Soil Sensor</span>
+                  <span style={{ color: sensorHealth.soilMoisture === 'online' ? '#00c06d' : '#ef4444', fontWeight: 600 }}>
+                    — {sensorHealth.soilMoisture === 'online' ? 'Online' : 'Offline'}
+                  </span>
+                </div>
+
+                {/* DHT22 */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px' }}>
+                  <span
+                    style={{
+                      width: '7px',
+                      height: '7px',
+                      borderRadius: '50%',
+                      background: sensorHealth.dht22 === 'online' ? '#00c06d' : '#ef4444'
+                    }}
+                  />
+                  <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>DHT22</span>
+                  <span style={{ color: sensorHealth.dht22 === 'online' ? '#00c06d' : '#ef4444', fontWeight: 600 }}>
+                    — {sensorHealth.dht22 === 'online' ? 'Online' : 'Offline'}
+                  </span>
+                </div>
+
+                {/* Light Sensor */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px' }}>
+                  <span
+                    style={{
+                      width: '7px',
+                      height: '7px',
+                      borderRadius: '50%',
+                      background: sensorHealth.lightSensor === 'online' ? '#00c06d' : '#ef4444'
+                    }}
+                  />
+                  <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>Light Sensor</span>
+                  <span style={{ color: sensorHealth.lightSensor === 'online' ? '#00c06d' : '#ef4444', fontWeight: 600 }}>
+                    — {sensorHealth.lightSensor === 'online' ? 'Online' : 'Offline'}
+                  </span>
+                </div>
+
+                {/* ESP32 Wi-Fi Node */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px' }}>
+                  <span
+                    style={{
+                      width: '7px',
+                      height: '7px',
+                      borderRadius: '50%',
+                      background: sensorHealth.esp32 === 'online' ? '#00c06d' : '#ef4444'
+                    }}
+                  />
+                  <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>ESP32</span>
+                  <span style={{ color: sensorHealth.esp32 === 'online' ? '#00c06d' : '#ef4444', fontWeight: 600 }}>
+                    — {sensorHealth.esp32 === 'online' ? 'Online' : 'Offline'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Quick Simulator Test Access */}
+              <button
+                onClick={() => setIsHardwareSimOpen(true)}
+                className="btn-white-pill"
+                style={{ padding: '4px 10px', fontSize: '11px' }}
+                title="Test normal, dry, critical, or sensor failure scenarios"
+              >
+                <Sliders size={12} color="#f59e0b" />
+                <span>Test IoT Scenarios</span>
+              </button>
             </div>
-          </div>
-        </div>
 
         {/* 4. MIDDLE ROW: 3 COLUMNS (Gauge, Species Breakdown, Pot Architecture Map) */}
         <div className="ref-mid-grid">
@@ -931,37 +1252,84 @@ export default function App() {
           </div>
         </div>
 
-        {/* 5. BOTTOM ROW: 2 COLUMNS (Left 2 Stacked Pills, Right Hero Green Card) */}
+        {/* 5. BOTTOM ROW: 2 COLUMNS (Section 8: Irrigation State & Reason, Section 16 & 18: Water Usage) */}
         <div className="ref-bottom-grid">
           {/* Left Stacked Column */}
           <div>
-            {/* Pill Card 1: Dark Forest Pill (Matching Climate Change Index 76.2) */}
-            <div className="dark-pill-card">
-              <div className="dark-pill-circle tnum">
-                {activePot.settings.autoWateringEnabled ? 'AUTO' : 'MAN'}
+            {/* Pill Card 1: Pump Status & Closed-Loop Control (Sections 2, 8, 12, 19) */}
+            <div className="dark-pill-card" style={{ padding: '16px 20px', minHeight: '82px' }}>
+              <div
+                className="dark-pill-circle tnum"
+                style={{
+                  background: isPumping ? '#00c06d' : 'rgba(255,255,255,0.1)',
+                  color: '#ffffff',
+                  boxShadow: isPumping ? '0 0 12px rgba(0, 192, 109, 0.6)' : 'none',
+                  transition: 'all 300ms ease'
+                }}
+              >
+                {isPumping ? 'ON' : activePot.settings.autoWateringEnabled ? 'AUTO' : 'MAN'}
               </div>
-              <div style={{ flex: 1 }}>
-                <div className="dark-pill-title">Closed-Loop Irrigation Automation</div>
-                <div className="dark-pill-sub">
-                  Edge microcontroller logic autonomous from cloud dropouts
+
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <div className="dark-pill-title" style={{ margin: 0 }}>
+                    Pump Status: {isPumping ? '● ON (Irrigation Active)' : '● OFF (Irrigation Inactive)'}
+                  </div>
+                  {isPumping && (
+                    <span style={{ fontSize: '10px', color: '#6ee7b7', background: 'rgba(16, 185, 129, 0.2)', padding: '1px 6px', borderRadius: '6px', fontWeight: 700 }}>
+                      Delivering root hydration...
+                    </span>
+                  )}
+                </div>
+
+                <div className="dark-pill-sub" style={{ marginTop: '3px', color: isPumping ? '#a7f3d0' : 'rgba(255, 255, 255, 0.65)' }}>
+                  <strong>Reason:</strong> {getIrrigationStateReason(isPumping, activePot.telemetry, activePot.settings, lastTriggerType)}
                 </div>
               </div>
-              <div
-                className="switch-container"
-                onClick={() =>
-                  handleUpdateSettings({
-                    ...activePot.settings,
-                    autoWateringEnabled: !activePot.settings.autoWateringEnabled
-                  })
-                }
-              >
-                <div className={`switch-track ${activePot.settings.autoWateringEnabled ? 'active' : ''}`}>
-                  <div className="switch-thumb" />
+
+              {/* Manual Control Action Button & Auto Toggle */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                {isPumping ? (
+                  <button
+                    onClick={stopWatering}
+                    className="btn-white-pill"
+                    style={{ padding: '5px 12px', fontSize: '11px', background: '#ef4444', color: '#ffffff', borderColor: '#f87171' }}
+                    title="Stop pump immediately"
+                  >
+                    <Square size={11} fill="#ffffff" />
+                    <span>STOP</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => triggerWatering(activePot.settings.burstDurationSec || 6, 'Manual', 'Manual pulse initiated from Dashboard control')}
+                    disabled={activePot.telemetry.tankLevelPercent <= 5}
+                    className="btn-white-pill"
+                    style={{ padding: '5px 12px', fontSize: '11px' }}
+                    title={activePot.telemetry.tankLevelPercent <= 5 ? 'Reservoir is empty' : 'Start manual irrigation pulse'}
+                  >
+                    <Play size={11} color="#00c06d" fill="#00c06d" />
+                    <span>START</span>
+                  </button>
+                )}
+
+                <div
+                  className="switch-container"
+                  onClick={() =>
+                    handleUpdateSettings({
+                      ...activePot.settings,
+                      autoWateringEnabled: !activePot.settings.autoWateringEnabled
+                    })
+                  }
+                  title="Toggle Autonomous Closed-Loop Irrigation"
+                >
+                  <div className={`switch-track ${activePot.settings.autoWateringEnabled ? 'active' : ''}`}>
+                    <div className="switch-thumb" />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Pill Card 2: White Pill with Green Ring (Matching Water level in Dnipro 57m) */}
+            {/* Pill Card 2: White Pill with Green Ring (Matching Reservoir Level) */}
             <div className="white-pill-card">
               <div className="white-pill-circle tnum">
                 {activePot.telemetry.tankLevelPercent}%
@@ -991,7 +1359,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right Column: Vibrant Forest Green Hero Card (Matching AeuxGlobal "Let's join our community") */}
+          {/* Right Column: Vibrant Forest Green Hero Card (Sections 16 & 18: Water Savings & Usage) */}
           <div className="green-hero-card">
             {/* Background Botanical Leaves Vector Silhouette */}
             <svg className="hero-leaves-bg" viewBox="0 0 200 160" fill="none">
@@ -1034,7 +1402,7 @@ export default function App() {
             {/* Main Headline */}
             <div style={{ zIndex: 2 }}>
               <h2 className="hero-title">
-                61.9% Water Conserved
+                61.9% Water Conserved (Estimated)
               </h2>
               <p style={{ fontSize: '12px', opacity: 0.85, marginTop: '2px', maxWidth: '300px' }}>
                 Closed-loop root-zone delivery minimizes surface evaporation and drainage runoff.
@@ -1050,7 +1418,7 @@ export default function App() {
                 VPD Transpiration Sync
               </span>
               <span style={{ fontSize: '11px', opacity: 0.8, marginLeft: 'auto' }}>
-                ~545 mL / pot / wk saved
+                Today: {waterMetrics.waterTodayMl} mL (Est.) • ~545 mL / pot / wk saved (Est.)
               </span>
             </div>
           </div>
@@ -1120,6 +1488,55 @@ export default function App() {
             </div>
             <div style={{ padding: '8px', background: '#dcfce7', borderRadius: '10px' }}>
               <ArrowUpRight size={20} color="#15803d" />
+            </div>
+          </div>
+        </div>
+
+        {/* Water Usage & Irrigation Insights Card (Sections 16, 17, 18) */}
+        <div className="ref-card" style={{ padding: '16px 20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Droplet size={16} color="#00c06d" />
+              <h4 style={{ fontSize: '13.5px', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
+                Water Usage & Conservation Analytics (Estimated)
+              </h4>
+            </div>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+              *Estimated from pump runtime & nozzle delivery (5.5 mL/s). Flow sensor hardware not installed.
+            </span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+            <div style={{ padding: '10px 14px', background: 'var(--subtle-input-bg)', borderRadius: '10px', border: '1px solid var(--card-border)' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Water Used Today (Est.)</div>
+              <div style={{ fontSize: '18px', fontWeight: 700, color: '#0284c7', marginTop: '2px' }} className="tnum">
+                {waterMetrics.waterTodayMl} mL
+              </div>
+              <div style={{ fontSize: '10.5px', color: '#10b981', marginTop: '3px' }}>Sub-surface direct root feed</div>
+            </div>
+
+            <div style={{ padding: '10px 14px', background: 'var(--subtle-input-bg)', borderRadius: '10px', border: '1px solid var(--card-border)' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Water Used This Week (Est.)</div>
+              <div style={{ fontSize: '18px', fontWeight: 700, color: '#0284c7', marginTop: '2px' }} className="tnum">
+                {waterMetrics.waterThisWeekMl} mL
+              </div>
+              <div style={{ fontSize: '10.5px', color: '#10b981', marginTop: '3px' }}>61.9% reduction vs surface spray</div>
+            </div>
+
+            <div style={{ padding: '10px 14px', background: 'var(--subtle-input-bg)', borderRadius: '10px', border: '1px solid var(--card-border)' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Total Irrigation Events</div>
+              <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-main)', marginTop: '2px' }} className="tnum">
+                {waterMetrics.totalEvents} cycles
+              </div>
+              <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', marginTop: '3px' }}>100% Demand-based triggers</div>
+            </div>
+
+            <div style={{ padding: '10px 14px', background: 'var(--subtle-input-bg)', borderRadius: '10px', border: '1px solid var(--card-border)' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Average Pulse Duration</div>
+              <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-main)', marginTop: '2px' }} className="tnum">
+                {waterMetrics.avgDurationSec} sec
+              </div>
+              <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', marginTop: '3px' }}>~{(waterMetrics.avgDurationSec * 5.5).toFixed(0)} mL average dose</div>
             </div>
           </div>
         </div>
@@ -1237,16 +1654,42 @@ export default function App() {
                   </span>
                 )}
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <span style={{ fontSize: '32px' }}>{pot.preset?.icon || '🪴'}</span>
-                  <div>
-                    <h3 style={{ fontSize: '16px', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
-                      {pot.name}
-                    </h3>
-                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                      {pot.location} • <code style={{ fontSize: '10.5px' }}>{pot.device?.deviceId || 'ESP32'}</code>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{ fontSize: '32px' }}>{pot.preset?.icon || '🪴'}</span>
+                    <div>
+                      <h3 style={{ fontSize: '16px', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
+                        {pot.name}
+                      </h3>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                        {pot.location} • <code style={{ fontSize: '10.5px' }}>{pot.device?.deviceId || 'ESP32'}</code>
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-light)', marginTop: '2px' }}>
+                        Profile: <strong style={{ color: 'var(--text-main)' }}>{pot.preset?.commonName?.split('/')[0] || 'Standard'}</strong> ({pot.preset?.category || 'Indoor'})
+                      </div>
                     </div>
                   </div>
+
+                  {/* Plant Status Badge (Section 9) */}
+                  {(() => {
+                    const st = calculatePlantStatus(pot.telemetry, pot.settings);
+                    return (
+                      <span
+                        style={{
+                          fontSize: '10px',
+                          fontWeight: 700,
+                          color: st.color,
+                          background: st.bg,
+                          padding: '3px 8px',
+                          borderRadius: '8px',
+                          border: `1px solid ${st.border}`,
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        ● {st.label}
+                      </span>
+                    );
+                  })()}
                 </div>
 
                 {/* Moisture bar */}
@@ -1357,9 +1800,9 @@ export default function App() {
         <div className="ref-top-metrics-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
           <div className="ref-stat-card">
             <div>
-              <div className="ref-stat-label">Total Dispensed</div>
+              <div className="ref-stat-label">Water Used Today (Est.)</div>
               <div className="ref-stat-value tnum">
-                {actuationLogs.filter(l => l.potId === activePotId).reduce((s, l) => s + (l.millilitersDelivered || 0), 0)} <span style={{ fontSize: '15px', color: '#647d72', fontWeight: 500 }}>mL</span>
+                {waterMetrics.waterTodayMl} <span style={{ fontSize: '15px', color: '#647d72', fontWeight: 500 }}>mL</span>
               </div>
               <div className="ref-stat-sub">
                 <span style={{ color: '#00c06d', fontWeight: 600 }}>● Precision dosing</span>
@@ -1372,12 +1815,27 @@ export default function App() {
 
           <div className="ref-stat-card">
             <div>
-              <div className="ref-stat-label">Actuation Cycles</div>
+              <div className="ref-stat-label">Water Used This Week (Est.)</div>
               <div className="ref-stat-value tnum">
-                {actuationLogs.filter(l => l.potId === activePotId).length} <span style={{ fontSize: '15px', color: '#647d72', fontWeight: 500 }}>pulses</span>
+                {waterMetrics.waterThisWeekMl} <span style={{ fontSize: '15px', color: '#647d72', fontWeight: 500 }}>mL</span>
               </div>
               <div className="ref-stat-sub">
-                <span style={{ color: '#00c06d', fontWeight: 600 }}>100% delivered</span> safely
+                <span style={{ color: '#00c06d', fontWeight: 600 }}>61.9% conserved</span> vs spray
+              </div>
+            </div>
+            <div style={{ padding: '8px', background: '#dcfce7', borderRadius: '10px' }}>
+              <TrendingDown size={20} color="#15803d" />
+            </div>
+          </div>
+
+          <div className="ref-stat-card">
+            <div>
+              <div className="ref-stat-label">Irrigation Cycles</div>
+              <div className="ref-stat-value tnum">
+                {waterMetrics.totalEvents} <span style={{ fontSize: '15px', color: '#647d72', fontWeight: 500 }}>pulses</span>
+              </div>
+              <div className="ref-stat-sub">
+                <span style={{ color: '#00c06d', fontWeight: 600 }}>100% Demand-based</span> triggers
               </div>
             </div>
             <div style={{ padding: '8px', background: '#e4f7ee', borderRadius: '10px' }}>
@@ -1389,7 +1847,7 @@ export default function App() {
             <div>
               <div className="ref-stat-label">Average Pulse Length</div>
               <div className="ref-stat-value tnum">
-                5.2 <span style={{ fontSize: '15px', color: '#647d72', fontWeight: 500 }}>sec</span>
+                {waterMetrics.avgDurationSec} <span style={{ fontSize: '15px', color: '#647d72', fontWeight: 500 }}>sec</span>
               </div>
               <div className="ref-stat-sub">
                 <span style={{ color: '#f59e0b', fontWeight: 600 }}>Sub-surface drip</span> rate
@@ -1397,21 +1855,6 @@ export default function App() {
             </div>
             <div style={{ padding: '8px', background: '#fef3c7', borderRadius: '10px' }}>
               <Sliders size={20} color="#f59e0b" />
-            </div>
-          </div>
-
-          <div className="ref-stat-card">
-            <div>
-              <div className="ref-stat-label">Closed-Loop Automation</div>
-              <div className="ref-stat-value tnum">
-                87.5 <span style={{ fontSize: '15px', color: '#647d72', fontWeight: 500 }}>%</span>
-              </div>
-              <div className="ref-stat-sub">
-                <span style={{ color: '#00c06d', fontWeight: 600 }}>Auto triggered</span> by ADC
-              </div>
-            </div>
-            <div style={{ padding: '8px', background: '#dcfce7', borderRadius: '10px' }}>
-              <Zap size={20} color="#15803d" />
             </div>
           </div>
         </div>
@@ -1650,15 +2093,136 @@ export default function App() {
           addToast(`Tank level set to ${pct}%`, 'info');
         }}
         onTriggerFault={(type) => {
-          if (type === 'SENSOR_DISCONNECTED') {
+          if (type === 'SCENARIO_NORMAL') {
+            setSensorHealth({ soilMoisture: 'online', dht22: 'online', lightSensor: 'online', esp32: 'online' });
             setPots((prev) =>
               prev.map((p) =>
                 p.id === activePotId
-                  ? { ...p, telemetry: { ...p.telemetry, rawAdc: 4095, moisture: 0 } }
+                  ? {
+                      ...p,
+                      telemetry: {
+                        ...p.telemetry,
+                        moisture: 65.0,
+                        temperature: 27.0,
+                        humidity: 60.0,
+                        light: 450,
+                        lastUpdated: Date.now()
+                      }
+                    }
                   : p
               )
             );
-            addToast('Simulated sensor disconnect fault!', 'critical');
+            setIsPumping(false);
+            setLastTriggerReason('Soil moisture within optimal target range (65%)');
+            addToast('Normal Condition loaded: 65% soil, 27°C, 60% humidity, 450 lux, Pump OFF', 'success');
+          } else if (type === 'SCENARIO_DRY') {
+            setSensorHealth({ soilMoisture: 'online', dht22: 'online', lightSensor: 'online', esp32: 'online' });
+            setPots((prev) =>
+              prev.map((p) =>
+                p.id === activePotId
+                  ? {
+                      ...p,
+                      telemetry: {
+                        ...p.telemetry,
+                        moisture: 31.0,
+                        lastUpdated: Date.now()
+                      }
+                    }
+                  : p
+              )
+            );
+            triggerWatering(activePot.settings.burstDurationSec || 8, 'Autonomous', 'Soil moisture dropped to 31.0% (Below minimum threshold)');
+            addToast('Dry Condition loaded: 31% soil triggers pump ON', 'warning');
+          } else if (type === 'SCENARIO_CRITICAL') {
+            setSensorHealth({ soilMoisture: 'online', dht22: 'online', lightSensor: 'online', esp32: 'online' });
+            setPots((prev) =>
+              prev.map((p) =>
+                p.id === activePotId
+                  ? {
+                      ...p,
+                      telemetry: {
+                        ...p.telemetry,
+                        moisture: 18.0,
+                        lastUpdated: Date.now()
+                      }
+                    }
+                  : p
+              )
+            );
+            setAlerts((prev) => [
+              {
+                id: 'alt-' + Date.now(),
+                potId: activePotId,
+                type: 'critical',
+                title: 'Critical Soil Moisture Detected',
+                message: '⚠ Critical moisture (18%). Immediate emergency root hydration active.',
+                timestamp: 'Just now',
+                acknowledged: false
+              },
+              ...prev
+            ]);
+            triggerWatering(activePot.settings.burstDurationSec || 8, 'Autonomous', 'Critical moisture (18%) detected');
+            addToast('Critical Condition loaded: 18% soil, Alert active, pump ON', 'critical');
+          } else if (type === 'SCENARIO_SENSOR_FAIL' || type === 'SENSOR_DISCONNECTED') {
+            setSensorHealth((prev) => ({ ...prev, soilMoisture: 'offline' }));
+            setPots((prev) =>
+              prev.map((p) =>
+                p.id === activePotId
+                  ? {
+                      ...p,
+                      telemetry: {
+                        ...p.telemetry,
+                        rawAdc: 4095,
+                        moisture: null,
+                        lastUpdated: Date.now()
+                      }
+                    }
+                  : p
+              )
+            );
+            setAlerts((prev) => [
+              {
+                id: 'alt-' + Date.now(),
+                potId: activePotId,
+                type: 'critical',
+                title: 'Soil Moisture Sensor Offline',
+                message: '⚠ Soil moisture sensor is not responding (GPIO34). Displaying "--".',
+                timestamp: 'Just now',
+                acknowledged: false
+              },
+              ...prev
+            ]);
+            addToast('Sensor Failure loaded: Soil displays "--", Sensor Status: Offline', 'critical');
+          } else if (type === 'HEATWAVE') {
+            setPots((prev) =>
+              prev.map((p) =>
+                p.id === activePotId
+                  ? {
+                      ...p,
+                      telemetry: {
+                        ...p.telemetry,
+                        temperature: 33.2,
+                        humidity: 38.0,
+                        light: 7400,
+                        lastUpdated: Date.now()
+                      }
+                    }
+                  : p
+              )
+            );
+            setAlerts((prev) => [
+              {
+                id: 'alt-' + Date.now(),
+                potId: activePotId,
+                type: 'warning',
+                title: 'High Ambient Temperature (Heatwave)',
+                message: '⚠ Ambient temperature (33.2°C) is above the configured safe ceiling.',
+                timestamp: 'Just now',
+                acknowledged: false
+              },
+              ...prev
+            ]);
+            addToast('Midday heatwave simulated: High temp & intense direct sun', 'warning');
           }
         }}
         onRefillTank={() => {
