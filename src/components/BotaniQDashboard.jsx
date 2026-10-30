@@ -10,7 +10,9 @@ import {
   Settings,
   Cpu,
   TrendingDown,
-  ArrowRight
+  ArrowRight,
+  Leaf,
+  Check
 } from 'lucide-react';
 
 export default function BotaniQDashboard({
@@ -42,7 +44,7 @@ export default function BotaniQDashboard({
 
         <div className="hero-greeting-wrap">
           <h1 className="hero-greeting-title">
-            Good morning, Alex! 🌿
+            Good morning, Alex!
           </h1>
           <p className="hero-greeting-sub">
             Your smart garden is thriving today.
@@ -271,7 +273,7 @@ export default function BotaniQDashboard({
         <div className="mockup-card">
           <div className="mockup-card-header">
             <div className="mockup-card-title">
-              <span style={{ fontSize: '18px' }}>🌿</span>
+              <Leaf size={16} color="var(--accent-green)" />
               <span>Plant Health</span>
             </div>
             <span
@@ -287,7 +289,8 @@ export default function BotaniQDashboard({
                 gap: '4px'
               }}
             >
-              ✓ Healthy
+              <Check size={11} strokeWidth={3} />
+              <span>Healthy</span>
             </span>
           </div>
 
@@ -317,7 +320,9 @@ export default function BotaniQDashboard({
                 />
               </svg>
               <div className="donut-center-content">
-                <div className="donut-sprout-icon">🌱</div>
+                <div className="donut-sprout-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Leaf size={13} color="var(--accent-green)" />
+                </div>
                 <div className="donut-pct-text">87%</div>
                 <div className="donut-sub-text">Overall Health</div>
               </div>
@@ -326,21 +331,21 @@ export default function BotaniQDashboard({
             {/* Checklist */}
             <div className="plant-health-checklist">
               <div className="health-check-row">
-                <div className="check-circle-icon">✓</div>
+                <div className="check-circle-icon"><Check size={10} strokeWidth={3} /></div>
                 <div className="check-label-col">
                   <span className="check-title">Soil Moisture</span>
                   <span className="check-status">Optimal</span>
                 </div>
               </div>
               <div className="health-check-row">
-                <div className="check-circle-icon">✓</div>
+                <div className="check-circle-icon"><Check size={10} strokeWidth={3} /></div>
                 <div className="check-label-col">
                   <span className="check-title">Temperature</span>
                   <span className="check-status">Ideal</span>
                 </div>
               </div>
               <div className="health-check-row">
-                <div className="check-circle-icon">✓</div>
+                <div className="check-circle-icon"><Check size={10} strokeWidth={3} /></div>
                 <div className="check-label-col">
                   <span className="check-title">Light Level</span>
                   <span className="check-status">Good</span>
@@ -540,7 +545,7 @@ export default function BotaniQDashboard({
         <div className="mockup-card">
           <div className="mockup-card-header">
             <div className="mockup-card-title">
-              <span style={{ fontSize: '16px' }}>💧</span>
+              <Droplet size={16} color="var(--accent-green)" />
               <span>Water Reservoir</span>
             </div>
           </div>
@@ -588,7 +593,7 @@ export default function BotaniQDashboard({
         <div className="mockup-card">
           <div className="mockup-card-header">
             <div className="mockup-card-title">
-              <span style={{ fontSize: '16px' }}>🌱</span>
+              <Leaf size={16} color="var(--accent-green)" />
               <span>Species Presets</span>
             </div>
           </div>

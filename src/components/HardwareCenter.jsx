@@ -198,7 +198,7 @@ export default function HardwareCenter({
 
   // Full Arduino Firmware Code
   const firmwareCode = `/*
- * 🌿 BotanIQ ESP32 Smart Pot Firmware
+ * BotanIQ ESP32 Smart Pot Firmware
  * Dual Serial USB & Wi-Fi MQTT Telemetry
  */
 #include <WiFi.h>
@@ -627,7 +627,7 @@ void loop() {
                 {/* Bottom Status Ribbon inside diagram */}
                 <rect x="250" y="420" width="300" height="36" rx="8" fill="#0a120e" stroke="#1c3829" strokeWidth="1" />
                 <text x="400" y="442" textAnchor="middle" fill="#34d399" fontSize="10.5" fontWeight="600">
-                  ✦ Sub-Surface Closed-Loop Circuit: Active & Monitored
+                  Sub-Surface Closed-Loop Circuit: Active & Monitored
                 </text>
               </svg>
             </div>
@@ -724,8 +724,9 @@ void loop() {
             </div>
 
             {serialError && (
-              <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', padding: '10px 14px', borderRadius: '8px', color: '#b91c1c', fontSize: '12px', marginBottom: '12px' }}>
-                ⚠️ {serialError}
+              <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', padding: '10px 14px', borderRadius: '8px', color: '#b91c1c', fontSize: '12px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <AlertTriangle size={14} color="#b91c1c" />
+                <span>{serialError}</span>
               </div>
             )}
 

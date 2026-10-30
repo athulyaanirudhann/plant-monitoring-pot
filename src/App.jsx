@@ -64,7 +64,8 @@ import {
   Play,
   Bell,
   Settings,
-  Activity
+  Activity,
+  Leaf
 } from 'lucide-react';
 
 export default function App() {
@@ -272,7 +273,7 @@ export default function App() {
         potId: activePotId,
         type: 'info',
         title: triggerType === 'Autonomous' ? 'Automatic Irrigation Started' : 'Manual Irrigation Started',
-        message: `💧 Sub-surface pump activated. Reason: ${triggerReason}`,
+        message: `Sub-surface pump activated. Reason: ${triggerReason}`,
         timestamp: 'Just now',
         acknowledged: false
       },
@@ -332,7 +333,7 @@ export default function App() {
           potId: activePotId,
           type: 'info',
           title: 'Irrigation Completed Successfully',
-          message: `✓ Target moisture reached. Delivered ${deliveredMl} mL directly to root zone.`,
+          message: `Target moisture reached. Delivered ${deliveredMl} mL directly to root zone.`,
           timestamp: 'Just now',
           acknowledged: false
         },
@@ -715,7 +716,9 @@ export default function App() {
               >
                 {isStale ? (
                   <>
-                    <span style={{ color: 'var(--accent-coral)', fontWeight: 700 }}>⚠ Data may be outdated</span> ({dataAgeSec}s ago)
+                    <span style={{ color: 'var(--accent-coral)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <AlertTriangle size={12} color="var(--accent-coral)" /> Data may be outdated
+                    </span> ({dataAgeSec}s ago)
                   </>
                 ) : (
                   <>
@@ -1022,7 +1025,9 @@ export default function App() {
 
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <span style={{ fontSize: '32px' }}>{pot.preset?.icon || '🪴'}</span>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(4, 106, 56, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Leaf size={22} color="var(--accent-green)" />
+                    </div>
                     <div>
                       <h3 style={{ fontSize: '16px', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
                         {pot.name}
@@ -1148,7 +1153,9 @@ export default function App() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
             {Object.entries(PLANT_PRESETS).slice(0, 4).map(([key, p]) => (
               <div key={key} style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-                <div style={{ fontSize: '20px', marginBottom: '4px' }}>{p.icon}</div>
+                <div style={{ width: '32px', height: '32px', borderRadius: '6px', background: 'rgba(4, 106, 56, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px' }}>
+                  <Leaf size={16} color="var(--accent-green)" />
+                </div>
                 <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-main)' }}>{p.name}</div>
                 <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>Optimal: {p.thresholdLow}% - {p.thresholdHigh}%</div>
                 <div style={{ fontSize: '10.5px', color: 'var(--text-light)', marginTop: '4px' }}>Pulse: {p.recommendedPulseDurationSec}s • {p.lightRequirement}</div>
@@ -1546,7 +1553,7 @@ export default function App() {
                 potId: activePotId,
                 type: 'critical',
                 title: 'Critical Soil Moisture Detected',
-                message: '⚠ Critical moisture (18%). Immediate emergency root hydration active.',
+                message: 'Critical moisture (18%). Immediate emergency root hydration active.',
                 timestamp: 'Just now',
                 acknowledged: false
               },
@@ -1577,7 +1584,7 @@ export default function App() {
                 potId: activePotId,
                 type: 'critical',
                 title: 'Soil Moisture Sensor Offline',
-                message: '⚠ Soil moisture sensor is not responding (GPIO34). Displaying "--".',
+                message: 'Soil moisture sensor is not responding (GPIO34). Displaying "--".',
                 timestamp: 'Just now',
                 acknowledged: false
               },
@@ -1607,7 +1614,7 @@ export default function App() {
                 potId: activePotId,
                 type: 'warning',
                 title: 'High Ambient Temperature (Heatwave)',
-                message: '⚠ Ambient temperature (33.2°C) is above the configured safe ceiling.',
+                message: 'Ambient temperature (33.2°C) is above the configured safe ceiling.',
                 timestamp: 'Just now',
                 acknowledged: false
               },

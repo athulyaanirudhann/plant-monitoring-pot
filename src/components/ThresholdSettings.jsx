@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sliders, Droplet, Play, Check, Send, AlertCircle, Sparkles, Thermometer, Sun, Wind, ShieldAlert } from 'lucide-react';
+import { Sliders, Droplet, Play, Check, Send, AlertCircle, Sparkles, Thermometer, Sun, Wind, ShieldAlert, Leaf } from 'lucide-react';
 import { PLANT_PRESETS } from '../data/plantPresets';
 
 export default function ThresholdSettings({
@@ -155,7 +155,7 @@ export default function ThresholdSettings({
                   borderRadius: 'calc(var(--radius) - 2px)'
                 }}
               >
-                <span>{preset.icon}</span>
+                <Leaf size={14} color="var(--accent-green)" />
                 <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '11.5px' }}>
                   {preset.commonName.split('/')[0]}
                 </span>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Terminal, Sliders, Droplet, AlertTriangle, ShieldAlert, Sun, Moon, Cpu, RefreshCw, Copy, Check, Code } from 'lucide-react';
+import { Terminal, Sliders, Droplet, AlertTriangle, ShieldAlert, Sun, Moon, Cpu, RefreshCw, Copy, Check, Code, Leaf, AlertCircle, X } from 'lucide-react';
 
 export default function HardwareSimulator({
   isOpen,
@@ -119,7 +119,7 @@ void loop() {
             </p>
           </div>
           <button onClick={onClose} className="btn btn-ghost btn-sm" style={{ padding: '4px 8px' }}>
-            ✕
+            <X size={16} />
           </button>
         </div>
 
@@ -168,7 +168,7 @@ void loop() {
                   className="btn btn-outline btn-sm"
                   style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#046A38' }}
                 >
-                  <span>🌿</span>
+                  <Leaf size={14} color="#046A38" />
                   <span><strong>Normal:</strong> 65% soil, 27°C, 450 lux (Pump OFF)</span>
                 </button>
 
@@ -177,7 +177,7 @@ void loop() {
                   className="btn btn-outline btn-sm"
                   style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#d9531e' }}
                 >
-                  <span>💧</span>
+                  <Droplet size={14} color="var(--accent-green)" />
                   <span><strong>Dry:</strong> 31% soil, triggers pump ON</span>
                 </button>
 
@@ -186,7 +186,7 @@ void loop() {
                   className="btn btn-outline btn-sm"
                   style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#E34222' }}
                 >
-                  <span>⚠️</span>
+                  <AlertTriangle size={14} color="#E34222" />
                   <span><strong>Critical:</strong> 18% soil, Critical Alert</span>
                 </button>
 
@@ -195,7 +195,7 @@ void loop() {
                   className="btn btn-outline btn-sm"
                   style={{ justifyContent: 'flex-start', padding: '7px 10px', fontSize: '11.5px', color: '#E34222' }}
                 >
-                  <span>🚫</span>
+                  <AlertCircle size={14} color="#E34222" />
                   <span><strong>Failure:</strong> Soil --, Sensor Offline</span>
                 </button>
               </div>

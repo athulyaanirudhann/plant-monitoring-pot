@@ -1,5 +1,5 @@
 import React from 'react';
-import { Droplet, Cpu, Activity, Gauge } from 'lucide-react';
+import { Droplet, Cpu, Activity, Gauge, Leaf } from 'lucide-react';
 
 export default function PotIllustration({ moisture, isPumping, tankLevel, plantPreset }) {
   // Moisture condition: critical (<20), dry (20-35), optimal (35-65), saturated (>65)
@@ -15,7 +15,7 @@ export default function PotIllustration({ moisture, isPumping, tankLevel, plantP
       <div className="card-header" style={{ marginBottom: 8 }}>
         <div>
           <h3 className="card-title">
-            <span style={{ fontSize: '18px' }}>{plantPreset?.icon || '🌿'}</span>
+            <Leaf size={18} color="var(--accent-green)" />
             Physical Pot Architecture
           </h3>
           <p className="card-subtitle">Root-zone sub-surface delivery & capacitive probe schematic</p>
