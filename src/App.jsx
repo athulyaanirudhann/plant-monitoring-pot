@@ -121,6 +121,42 @@ export default function App() {
     localStorage.setItem('botaniq_theme', 'light');
   }, []);
 
+  // Custom Solid Inverted Dot Cursor (Pine Green #1F3B2E / White Inversion)
+  useEffect(() => {
+    const cursor = document.getElementById('botaniq-cursor');
+    if (!cursor) return;
+
+    let isVisible = false;
+
+    const onMouseMove = (e) => {
+      cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      if (!isVisible) {
+        isVisible = true;
+        cursor.style.opacity = '1';
+      }
+    };
+
+    const onMouseLeave = () => {
+      isVisible = false;
+      cursor.style.opacity = '0';
+    };
+
+    const onMouseEnter = () => {
+      isVisible = true;
+      cursor.style.opacity = '1';
+    };
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    document.addEventListener('mouseleave', onMouseLeave);
+    document.addEventListener('mouseenter', onMouseEnter);
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseleave', onMouseLeave);
+      document.removeEventListener('mouseenter', onMouseEnter);
+    };
+  }, []);
+
   // Toasts
   const [toasts, setToasts] = useState([]);
 
@@ -1643,6 +1679,9 @@ export default function App() {
           </div>
         ))}
       </div>
+
+      {/* Solid Inverted Dot Cursor */}
+      <div id="botaniq-cursor" className="botaniq-custom-cursor" />
     </div>
   );
 }

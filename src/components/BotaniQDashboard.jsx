@@ -46,9 +46,6 @@ export default function BotaniQDashboard({
           <h1 className="hero-greeting-title">
             Good morning, Alex!
           </h1>
-          <p className="hero-greeting-sub">
-            Your smart garden is thriving today.
-          </p>
         </div>
 
         <div className="hero-actions-cluster">
