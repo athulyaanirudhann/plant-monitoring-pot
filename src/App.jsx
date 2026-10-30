@@ -89,6 +89,7 @@ export default function App() {
   const [isHardwareSimOpen, setIsHardwareSimOpen] = useState(false);
   const [isThresholdModalOpen, setIsThresholdModalOpen] = useState(false);
   const [isSpeciesModalOpen, setIsSpeciesModalOpen] = useState(false);
+  const [isAlertsModalOpen, setIsAlertsModalOpen] = useState(false);
   const [card3View, setCard3View] = useState('map'); // 'map' | 'pot'
 
   // Sensor Calibration Workbench State
@@ -604,6 +605,31 @@ export default function App() {
               <Settings className="sidebar-nav-icon" size={18} />
               <span>Settings</span>
             </button>
+
+            <button
+              onClick={() => setIsAlertsModalOpen(true)}
+              className="sidebar-nav-item"
+              title="System Notifications & Alerts"
+            >
+              <Bell className="sidebar-nav-icon" size={18} />
+              <span>Alerts & Notifications</span>
+              {alerts.filter((a) => a.potId === activePotId && !a.acknowledged).length > 0 && (
+                <span
+                  style={{
+                    marginLeft: 'auto',
+                    background: '#1F3B2E',
+                    color: '#ffffff',
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    padding: '1px 6px',
+                    borderRadius: '9999px',
+                    border: '1px solid rgba(255,255,255,0.2)'
+                  }}
+                >
+                  {alerts.filter((a) => a.potId === activePotId && !a.acknowledged).length}
+                </span>
+              )}
+            </button>
           </div>
         </div>
 
@@ -741,14 +767,6 @@ export default function App() {
         )}
 
 
-        {/* Diagnostic Alerts Banner */}
-        <AlertsCenter
-          alerts={alerts.filter((a) => a.potId === activePotId)}
-          onDismissAlert={handleDismissAlert}
-          onAcknowledgeAlert={handleAcknowledgeAlert}
-          onTestSoundAlert={handleTestSoundAlert}
-        />
-
         {/* 1. VIEW: DASHBOARD (EXACT BOTANIQ IOT REFERENCE MOCKUP) */}
         {activeNav === 'dashboard' && (
           <BotaniQDashboard
@@ -757,6 +775,7 @@ export default function App() {
             dataAgeSec={dataAgeSec}
             alerts={alerts.filter((a) => a.potId === activePotId)}
             handleTestSoundAlert={handleTestSoundAlert}
+            setIsAlertsModalOpen={setIsAlertsModalOpen}
             timeRange={timeRange}
             setTimeRange={setTimeRange}
             isPumping={isPumping}
@@ -1413,6 +1432,15 @@ export default function App() {
       <WaterSavingsModal
         isOpen={isWaterSavingsOpen}
         onClose={() => setIsWaterSavingsOpen(false)}
+      />
+
+      <AlertsCenter
+        isOpen={isAlertsModalOpen}
+        onClose={() => setIsAlertsModalOpen(false)}
+        alerts={alerts.filter((a) => a.potId === activePotId)}
+        onDismissAlert={handleDismissAlert}
+        onAcknowledgeAlert={handleAcknowledgeAlert}
+        onTestSoundAlert={handleTestSoundAlert}
       />
 
       <ThresholdModal

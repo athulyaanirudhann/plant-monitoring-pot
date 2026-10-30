@@ -19,6 +19,7 @@ export default function BotaniQDashboard({
   dataAgeSec,
   alerts,
   handleTestSoundAlert,
+  setIsAlertsModalOpen,
   timeRange,
   setTimeRange,
   isPumping,
@@ -81,9 +82,9 @@ export default function BotaniQDashboard({
 
           {/* Notifications Bell Button */}
           <button
-            onClick={() => handleTestSoundAlert()}
+            onClick={() => setIsAlertsModalOpen && setIsAlertsModalOpen(true)}
             className="hero-circle-btn"
-            title={`${alerts?.length || 0} active notifications • Click to test audio alert buzzer`}
+            title={`${alerts?.length || 0} active notifications • Click to view System Notifications & Alerts`}
             style={{ position: 'relative' }}
           >
             <Bell size={17} color="var(--text-main)" />
