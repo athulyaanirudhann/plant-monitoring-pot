@@ -1969,82 +1969,219 @@ html, body {
 .widget-content-layout {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin: auto 0;
-  flex: 1;
+  gap: 12px;
+  margin-bottom: 2px;
 }
 
-.tank-render-img {
-  width: 76px;
-  height: 86px;
-  object-fit: contain;
-  background: transparent;
-  filter: drop-shadow(0 3px 6px rgba(31, 59, 46, 0.12));
+/* Dedicated Hardware & Specimen Preview Pod */
+.widget-preview-frame {
+  width: 86px;
+  height: 90px;
+  background: linear-gradient(180deg, rgba(31, 59, 46, 0.04) 0%, rgba(31, 59, 46, 0.02) 100%);
+  border: 1px solid rgba(31, 59, 46, 0.08);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  padding: 4px;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.7);
+  position: relative;
+  overflow: hidden;
 }
 
-.potted-plant-render-img {
-  width: 76px;
-  height: 86px;
+.widget-frame-asset {
+  max-width: 100%;
+  max-height: 80px;
   object-fit: contain;
-  background: transparent;
   filter: drop-shadow(0 3px 6px rgba(31, 59, 46, 0.12));
-  flex-shrink: 0;
+  display: block;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.widget-preview-frame:hover .widget-frame-asset {
+  transform: scale(1.05);
+}
+
+/* Info Column: Balanced 3-Row Rhythm */
 .widget-info-col {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 6px;
+  justify-content: space-between;
+  height: 90px;
+  gap: 3px;
   flex: 1;
+  min-width: 0;
 }
 
 .widget-headline-val {
-  font-size: 27px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--text-main);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.05;
   font-feature-settings: 'tnum' 1;
+}
+
+.widget-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  line-height: 1.2;
+}
+
+.widget-badge-tag.success {
+  color: var(--accent-green);
+  background: rgba(4, 106, 56, 0.09);
+}
+
+.widget-badge-tag.subtle {
+  color: var(--text-muted);
+  background: rgba(31, 59, 46, 0.05);
+  font-weight: 600;
+}
+
+.widget-species-title-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.widget-species-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.widget-species-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .widget-sub-metric {
   font-size: 11.5px;
   font-weight: 600;
   color: var(--text-muted);
-  margin-top: 1px;
-  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 1.2;
 }
 
-.widget-action-pill {
-  background: var(--sidebar-bg);
-  color: #ffffff;
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 6px 14px;
-  font-size: 11.5px;
+.widget-sub-metric strong {
+  color: var(--accent-green);
+  font-weight: 800;
+  margin-left: 4px;
+}
+
+/* Visual Progress Meter */
+.widget-meter-track {
+  width: 100%;
+  height: 7px;
+  background: rgba(4, 106, 56, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.widget-meter-fill {
+  height: 100%;
+  background: var(--accent-green);
+  border-radius: 4px;
+  transition: width 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Species Target Range Meter */
+.widget-range-track {
+  width: 100%;
+  height: 7px;
+  background: rgba(31, 59, 46, 0.07);
+  border-radius: 4px;
+  position: relative;
+  overflow: visible;
+}
+
+.widget-range-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(4, 106, 56, 0.28);
+  border: 1px solid var(--accent-green);
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+.widget-range-pin {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.widget-action-btn {
+  background: #ffffff;
+  color: var(--sidebar-bg);
+  border: 1px solid rgba(31, 59, 46, 0.18);
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
-  align-self: flex-start;
-  transition: all 160ms ease;
-  box-shadow: 0 1px 4px rgba(31, 59, 46, 0.15);
+  transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(31, 59, 46, 0.05);
+  white-space: nowrap;
+  line-height: 1.3;
 }
 
-.widget-action-pill:hover {
-  background: var(--accent-green);
+.widget-action-btn:hover {
+  background: var(--sidebar-bg);
+  color: #ffffff;
+  border-color: var(--sidebar-bg);
+  box-shadow: 0 2px 5px rgba(31, 59, 46, 0.15);
 }
 
-.widget-action-pill.outline {
-  background: #ffffff;
-  color: var(--text-main);
+.widget-action-btn:active {
+  transform: scale(0.97);
+}
+
+/* Shared Vital and Node Footer Chips */
+.health-vital-summary,
+.recent-activity-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(31, 59, 46, 0.04);
   border: 1px solid var(--card-border);
-  box-shadow: 0 1px 3px rgba(31, 59, 46, 0.05);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
-.widget-action-pill.outline:hover {
-  border-color: var(--accent-green);
-  color: var(--accent-green);
+.health-vital-summary strong,
+.recent-activity-footer strong {
+  color: var(--text-main);
 }
 
 /* Activity Feed List */
