@@ -301,54 +301,52 @@ export default function BotaniQDashboard({
                 <circle
                   cx="50"
                   cy="50"
-                  r="40"
+                  r="41"
                   fill="none"
                   stroke="rgba(4, 106, 56, 0.12)"
-                  strokeWidth="10"
+                  strokeWidth="8"
                 />
                 <circle
                   cx="50"
                   cy="50"
-                  r="40"
+                  r="41"
                   fill="none"
                   stroke="var(--accent-green)"
-                  strokeWidth="10"
-                  strokeDasharray="251.2"
-                  strokeDashoffset={251.2 - (251.2 * 87) / 100}
+                  strokeWidth="8"
+                  strokeDasharray="257.6"
+                  strokeDashoffset={257.6 - (257.6 * 87) / 100}
                   strokeLinecap="round"
                   style={{ transition: 'stroke-dashoffset 600ms ease' }}
                 />
               </svg>
               <div className="donut-center-content">
-                <div className="donut-sprout-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Leaf size={13} color="var(--accent-green)" />
-                </div>
+                <Leaf size={14} color="var(--accent-green)" style={{ marginBottom: '2px' }} />
                 <div className="donut-pct-text">87%</div>
-                <div className="donut-sub-text">Overall Health</div>
+                <div className="donut-sub-text">Health</div>
               </div>
             </div>
 
             {/* Checklist */}
             <div className="plant-health-checklist">
               <div className="health-check-row">
-                <div className="check-circle-icon"><Check size={10} strokeWidth={3} /></div>
+                <div className="check-circle-icon"><Check size={11} strokeWidth={3} /></div>
                 <div className="check-label-col">
                   <span className="check-title">Soil Moisture</span>
-                  <span className="check-status">Optimal</span>
+                  <span className="check-status">Optimal • 42.5%</span>
                 </div>
               </div>
               <div className="health-check-row">
-                <div className="check-circle-icon"><Check size={10} strokeWidth={3} /></div>
+                <div className="check-circle-icon"><Check size={11} strokeWidth={3} /></div>
                 <div className="check-label-col">
                   <span className="check-title">Temperature</span>
-                  <span className="check-status">Ideal</span>
+                  <span className="check-status">Ideal • 25.2°C</span>
                 </div>
               </div>
               <div className="health-check-row">
-                <div className="check-circle-icon"><Check size={10} strokeWidth={3} /></div>
+                <div className="check-circle-icon"><Check size={11} strokeWidth={3} /></div>
                 <div className="check-label-col">
                   <span className="check-title">Light Level</span>
-                  <span className="check-status">Good</span>
+                  <span className="check-status">Good • 2,450 Lux</span>
                 </div>
               </div>
             </div>
@@ -400,18 +398,25 @@ export default function BotaniQDashboard({
           </div>
 
           {/* SVG Multi-Line Spline Chart */}
-          <div style={{ flex: 1, minHeight: '80px', maxHeight: '110px', position: 'relative' }}>
-            <svg viewBox="0 0 400 150" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+          <div style={{ flex: 1, minHeight: '110px', position: 'relative', marginTop: '2px' }}>
+            <svg viewBox="0 0 400 135" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+              <defs>
+                <linearGradient id="moistureGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#046A38" stopOpacity="0.22" />
+                  <stop offset="100%" stopColor="#046A38" stopOpacity="0.0" />
+                </linearGradient>
+              </defs>
+
               {/* Y-Axis Grid Lines & Labels */}
               {[
-                { y: 15, val: '100' },
-                { y: 45, val: '75' },
-                { y: 75, val: '50' },
-                { y: 105, val: '25' },
-                { y: 135, val: '0' }
+                { y: 12, val: '100' },
+                { y: 38, val: '75' },
+                { y: 64, val: '50' },
+                { y: 90, val: '25' },
+                { y: 116, val: '0' }
               ].map((grid, idx) => (
                 <g key={idx}>
-                  <text x="2" y={grid.y + 4} fontSize="9.5" fill="var(--text-light)" fontWeight="500">
+                  <text x="2" y={grid.y + 4} fontSize="10" fill="var(--text-light)" fontWeight="500">
                     {grid.val}
                   </text>
                   <line
@@ -426,30 +431,36 @@ export default function BotaniQDashboard({
                 </g>
               ))}
 
+              {/* Moisture Soft Gradient Fill */}
+              <path
+                d="M 35 44 C 70 50 110 34 150 32 C 200 30 240 46 280 40 C 320 34 350 44 390 38 L 390 116 L 35 116 Z"
+                fill="url(#moistureGradient)"
+              />
+
               {/* Moisture Spline (Emerald Green) */}
               <path
-                d="M 35 48 C 70 54 110 38 150 36 C 200 34 240 50 280 44 C 320 38 350 48 390 42"
+                d="M 35 44 C 70 50 110 34 150 32 C 200 30 240 46 280 40 C 320 34 350 44 390 38"
                 fill="none"
                 stroke="var(--accent-green)"
-                strokeWidth="2.4"
+                strokeWidth="2.8"
                 strokeLinecap="round"
               />
 
               {/* Temperature Spline (Deep Pine Green) */}
               <path
-                d="M 35 68 C 80 72 130 64 170 58 C 220 52 260 68 300 60 C 340 54 370 66 390 74"
+                d="M 35 64 C 80 68 130 58 170 52 C 220 46 260 62 300 54 C 340 48 370 60 390 68"
                 fill="none"
                 stroke="#1F3B2E"
-                strokeWidth="2.2"
+                strokeWidth="2.4"
                 strokeLinecap="round"
               />
 
               {/* Humidity Spline (Dark Sage Green) */}
               <path
-                d="M 35 98 C 80 96 120 102 160 88 C 200 74 240 92 280 84 C 320 78 360 90 390 98"
+                d="M 35 92 C 80 90 120 96 160 82 C 200 68 240 86 280 78 C 320 72 360 84 390 92"
                 fill="none"
                 stroke="#4A6C5D"
-                strokeWidth="2"
+                strokeWidth="2.2"
                 strokeLinecap="round"
               />
 
@@ -461,7 +472,7 @@ export default function BotaniQDashboard({
                 { x: 290, time: '9:45AM' },
                 { x: 375, time: '10AM' }
               ].map((t, i) => (
-                <text key={i} x={t.x} y="148" fontSize="9" fill="var(--text-light)" textAnchor="middle">
+                <text key={i} x={t.x} y="132" fontSize="10" fill="var(--text-light)" textAnchor="middle" fontWeight="500">
                   {t.time}
                 </text>
               ))}
@@ -476,21 +487,33 @@ export default function BotaniQDashboard({
               <Droplet size={18} color="var(--accent-green)" />
               <span>Irrigation Control</span>
             </div>
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                color: isPumping ? '#ffffff' : 'var(--accent-green)',
+                background: isPumping ? 'var(--accent-green)' : 'rgba(4, 106, 56, 0.1)',
+                padding: '2px 8px',
+                borderRadius: 'var(--radius-pill)'
+              }}
+            >
+              {isPumping ? 'Active' : 'Autonomous'}
+            </span>
           </div>
 
           {/* Inner Elevated Highlight Box */}
           <div className="irrigation-inner-container">
             <div className="irrigation-pump-info">
               <div className={`pump-droplet-badge ${!isPumping ? 'off' : ''}`}>
-                <Droplet size={24} fill="#ffffff" />
+                <Droplet size={22} fill="#ffffff" />
               </div>
               <div className="pump-text-group">
-                <span className="pump-label">Pump</span>
+                <span className="pump-label">Sub-surface Pump</span>
                 <span className="pump-state-headline">
-                  {isPumping ? 'ON' : 'OFF'}
+                  {isPumping ? 'PUMP ACTIVE' : 'PUMP OFF'}
                 </span>
                 <span className="pump-reason-desc">
-                  {isPumping ? 'Delivering root hydration' : 'Soil moisture is sufficient'}
+                  {isPumping ? 'Delivering calibrated root pulse' : 'Moisture is within nominal target range'}
                 </span>
               </div>
             </div>
@@ -510,6 +533,24 @@ export default function BotaniQDashboard({
               <div className={`switch-track ${isPumping ? 'active' : ''}`}>
                 <div className="switch-thumb" />
               </div>
+            </div>
+          </div>
+
+          {/* Quick Telemetry Status Strip */}
+          <div className="irrigation-status-strip">
+            <div className="status-strip-col">
+              <span className="strip-label">Trigger</span>
+              <span className="strip-val">&lt; 32% Soil</span>
+            </div>
+            <div className="status-strip-divider" />
+            <div className="status-strip-col">
+              <span className="strip-label">Dose</span>
+              <span className="strip-val">{activePot?.settings?.waterPerCycleMl || 45} mL</span>
+            </div>
+            <div className="status-strip-divider" />
+            <div className="status-strip-col">
+              <span className="strip-label">Last Pulse</span>
+              <span className="strip-val">10:12 AM</span>
             </div>
           </div>
 
@@ -548,6 +589,18 @@ export default function BotaniQDashboard({
               <Droplet size={16} color="var(--accent-green)" />
               <span>Water Reservoir</span>
             </div>
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                color: 'var(--accent-green)',
+                background: 'rgba(4, 106, 56, 0.08)',
+                padding: '2px 8px',
+                borderRadius: '4px'
+              }}
+            >
+              Optimal Level
+            </span>
           </div>
 
           <div className="widget-content-layout">
@@ -557,34 +610,40 @@ export default function BotaniQDashboard({
               className="tank-render-img"
             />
             <div className="widget-info-col">
-              <div className="widget-headline-val">
-                {activePot?.telemetry?.tankLevelPercent || 78}%
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '2px' }}>
+                <span className="widget-headline-val">
+                  {activePot?.telemetry?.tankLevelPercent || 78}%
+                </span>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--accent-green)' }}>Tank Full</span>
               </div>
               <div className="widget-sub-metric">
-                {(((activePot?.telemetry?.tankLevelPercent || 78) * 1.5) / 100).toFixed(2)} L / 1.50 L
+                {(((activePot?.telemetry?.tankLevelPercent || 78) * 1.5) / 100).toFixed(2)} L / 1.50 L Reservoir Capacity
               </div>
-              <div className="metric-segmented-bar" style={{ marginTop: '0', marginBottom: '12px' }}>
+              <div className="metric-segmented-bar" style={{ marginTop: '0', marginBottom: '10px' }}>
                 <div
                   className="metric-segmented-bar-fill"
                   style={{ width: `${activePot?.telemetry?.tankLevelPercent || 78}%` }}
                 />
               </div>
-              <button
-                onClick={() => {
-                  setPots((prev) =>
-                    prev.map((p) =>
-                      p.id === activePotId
-                        ? { ...p, telemetry: { ...p.telemetry, tankLevelPercent: 100, tankCurrentMl: 1500 } }
-                        : p
-                    )
-                  );
-                  addToast('Water reservoir refilled to 1500 mL (100%)!', 'success');
-                }}
-                className="widget-action-pill"
-                title="Refill reservoir tank to 100%"
-              >
-                Refill
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
+                <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', fontWeight: 600 }}>Safe Level &gt; 10%</span>
+                <button
+                  onClick={() => {
+                    setPots((prev) =>
+                      prev.map((p) =>
+                        p.id === activePotId
+                          ? { ...p, telemetry: { ...p.telemetry, tankLevelPercent: 100, tankCurrentMl: 1500 } }
+                          : p
+                      )
+                    );
+                    addToast('Water reservoir refilled to 1500 mL (100%)!', 'success');
+                  }}
+                  className="widget-action-pill"
+                  title="Refill reservoir tank to 100%"
+                >
+                  Refill Tank
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -596,6 +655,18 @@ export default function BotaniQDashboard({
               <Leaf size={16} color="var(--accent-green)" />
               <span>Species Presets</span>
             </div>
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                color: 'var(--accent-green)',
+                background: 'rgba(4, 106, 56, 0.08)',
+                padding: '2px 8px',
+                borderRadius: '4px'
+              }}
+            >
+              Active Profile
+            </span>
           </div>
 
           <div className="widget-content-layout">
@@ -605,19 +676,28 @@ export default function BotaniQDashboard({
               className="potted-plant-render-img"
             />
             <div className="widget-info-col">
-              <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-main)', marginBottom: '4px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-main)', lineHeight: '1.2' }}>
                 {activePot?.preset ? activePot.preset.commonName.split('/')[0] : 'Swiss Cheese Plant'}
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--accent-green)', marginBottom: '14px' }}>
-                {activePot?.settings?.thresholdLow || 32}% – {activePot?.settings?.thresholdHigh || 58}%
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: '3px' }}>
+                Monstera Deliciosa • Tropical
               </div>
-              <button
-                onClick={() => setIsSpeciesModalOpen(true)}
-                className="widget-action-pill outline"
-                title="Change botanical species preset"
-              >
-                Change
-              </button>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '8px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)' }}>Target Band:</span>
+                <span style={{ fontSize: '17px', fontWeight: 800, color: 'var(--accent-green)' }}>
+                  {activePot?.settings?.thresholdLow || 32}% – {activePot?.settings?.thresholdHigh || 58}%
+                </span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
+                <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', fontWeight: 600 }}>Pulse: 8s • 45 mL</span>
+                <button
+                  onClick={() => setIsSpeciesModalOpen(true)}
+                  className="widget-action-pill outline"
+                  title="Change botanical species preset"
+                >
+                  Change Preset
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -652,20 +732,35 @@ export default function BotaniQDashboard({
           <div className="activity-feed-list">
             <div className="activity-feed-item">
               <span className="activity-dot green" />
-              <span className="activity-text-title">
-                {isPumping ? 'Pump currently ON' : 'Pump turned ON'}
-              </span>
+              <div className="activity-text-col">
+                <span className="activity-text-title">{isPumping ? 'Pump currently active' : 'Pump cycle completed'}</span>
+                <span className="activity-text-desc">Delivered 45 mL to root zone</span>
+              </div>
               <span className="activity-time-stamp">10:12 AM</span>
             </div>
             <div className="activity-feed-item">
               <span className="activity-dot dark" />
-              <span className="activity-text-title">Sensor data updated</span>
+              <div className="activity-text-col">
+                <span className="activity-text-title">Sensor telemetry synced</span>
+                <span className="activity-text-desc">Moisture 42.5% • 25.2°C • 2,450 Lux</span>
+              </div>
               <span className="activity-time-stamp">10:12 AM</span>
             </div>
             <div className="activity-feed-item">
               <span className="activity-dot pine" />
-              <span className="activity-text-title">Soil moisture low (alert)</span>
+              <div className="activity-text-col">
+                <span className="activity-text-title">Threshold safety verified</span>
+                <span className="activity-text-desc">All parameters within optimal band</span>
+              </div>
               <span className="activity-time-stamp">09:50 AM</span>
+            </div>
+            <div className="activity-feed-item">
+              <span className="activity-dot pine" />
+              <div className="activity-text-col">
+                <span className="activity-text-title">MQTT node heartbeat</span>
+                <span className="activity-text-desc">ESP32 online • RSSI -58 dBm</span>
+              </div>
+              <span className="activity-time-stamp">09:15 AM</span>
             </div>
           </div>
 
