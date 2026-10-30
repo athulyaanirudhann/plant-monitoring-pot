@@ -121,7 +121,7 @@ export default function App() {
     localStorage.setItem('botaniq_theme', 'light');
   }, []);
 
-  // Custom Solid Inverted Dot Cursor (Pine Green #1F3B2E / White Inversion)
+  // Custom Solid Inverted Dot Cursor (Pine Green #1F3B2E / Crisp Pure White #FFFFFF Inversion)
   useEffect(() => {
     const cursor = document.getElementById('botaniq-cursor');
     if (!cursor) return;
@@ -133,6 +133,69 @@ export default function App() {
       if (!isVisible) {
         isVisible = true;
         cursor.style.opacity = '1';
+      }
+
+      // Check boundary with sidebar panel for exact physical splitting
+      const sidebar = document.querySelector('.sidebar-panel');
+      const sRect = sidebar ? sidebar.getBoundingClientRect() : null;
+
+      let isSplit = false;
+
+      if (sRect) {
+        if (window.innerWidth > 1024) {
+          // Desktop: vertical boundary at sRect.right
+          const left = e.clientX - 8;
+          const right = e.clientX + 8;
+          const bX = sRect.right;
+          if (left < bX && right > bX && e.clientY >= sRect.top && e.clientY <= sRect.bottom) {
+            const pct = Math.max(0, Math.min(100, ((bX - left) / 16) * 100));
+            cursor.style.background = `linear-gradient(to right, #FFFFFF ${pct}%, var(--sidebar-bg) ${pct}%)`;
+            cursor.style.boxShadow = '0 0 6px rgba(255, 255, 255, 0.4)';
+            isSplit = true;
+          }
+        } else {
+          // Mobile/Tablet: horizontal boundary at sRect.bottom
+          const top = e.clientY - 8;
+          const bottom = e.clientY + 8;
+          const bY = sRect.bottom;
+          if (top < bY && bottom > bY && e.clientX >= sRect.left && e.clientX <= sRect.right) {
+            const pct = Math.max(0, Math.min(100, ((bY - top) / 16) * 100));
+            cursor.style.background = `linear-gradient(to bottom, #FFFFFF ${pct}%, var(--sidebar-bg) ${pct}%)`;
+            cursor.style.boxShadow = '0 0 6px rgba(255, 255, 255, 0.4)';
+            isSplit = true;
+          }
+        }
+      }
+
+      if (!isSplit) {
+        const target = document.elementFromPoint(e.clientX, e.clientY);
+        const isDark = Boolean(
+          target?.closest('.sidebar-panel') ||
+          target?.closest('button') ||
+          target?.closest('.btn') ||
+          target?.closest('.btn-white-pill') ||
+          target?.closest('.btn-black-pill') ||
+          target?.closest('.irrigation-action-btn') ||
+          target?.closest('.widget-action-btn') ||
+          target?.closest('.time-pill-btn') ||
+          target?.closest('.hero-circle-btn') ||
+          target?.closest('.recent-activity-view-all') ||
+          target?.closest('.hero-avatar-btn') ||
+          target?.closest('.theme-toggle-pill') ||
+          target?.closest('.modal-container') ||
+          target?.closest('.modal-overlay') ||
+          target?.closest('.modal-card') ||
+          target?.closest('.species-badge') ||
+          target?.closest('[role="button"]')
+        );
+
+        if (isDark) {
+          cursor.style.background = '#FFFFFF';
+          cursor.style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.5)';
+        } else {
+          cursor.style.background = 'var(--sidebar-bg)';
+          cursor.style.boxShadow = 'none';
+        }
       }
     };
 
